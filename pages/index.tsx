@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         {session && (
           <>
             <h1>
-              NoTerafoQuinielas
+              Welcome to NoTerafoQuinielas
             </h1>
             <p>
               Coming{' '}
