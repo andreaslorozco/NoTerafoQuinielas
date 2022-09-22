@@ -51,7 +51,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   role_id       Int       @unique @default(1)
-  role          Role?     @relation(fields: [role_id], references: [id])
+  role          Role      @relation(fields: [role_id], references: [id])
 }
 
 model VerificationToken {
