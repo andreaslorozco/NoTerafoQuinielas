@@ -5,7 +5,6 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 // import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-  // console.log(process.env)
   const { data: session } = useSession()
   return (
     <div>

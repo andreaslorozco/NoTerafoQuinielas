@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   db:
-    image: timescale/timescaledb-ha:pg13-latest
+    image: postgres:13-alpine
     restart: always
     volumes:
       - ./docker-data/db-data:/var/lib/postgresql/data
