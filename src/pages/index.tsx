@@ -24,8 +24,8 @@ const Home: NextPage = () => {
               Welcome, {session.user?.name.split(" ")[0]}
             </Heading>
             <Box mt={"2em"}>
-              <NextLink href="/my-groups" passHref>
-                <Button colorScheme="blue">Go to My Groups</Button>
+              <NextLink href="/my-lobbies" passHref>
+                <Button colorScheme="blue">Go to My Lobbies</Button>
               </NextLink>
             </Box>
           </>
