@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   return (
     <ChakraProvider theme={theme}>
       <SessionProvider session={pageProps.session}>
-        <Container maxW="container.md">
+        <Container maxW="container.md" mt={"2em"}>
           <Component {...pageProps} />
         </Container>
       </SessionProvider>
