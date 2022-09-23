@@ -43,15 +43,17 @@ model Role {
   user User?
 }
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  role_id       Int       @unique @default(1)
-  role          Role      @relation(fields: [role_id], references: [id])
+  id              Int         @id @default(autoincrement())
+  name            String?
+  email           String?     @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  role_id         Int         @unique @default(1)
+  role            Role        @relation(fields: [role_id], references: [id])
+  owned_lobbies   Lobby[]
+  user_lobbies    UserLobby[]
 }
 
 model VerificationToken {
@@ -60,4 +62,59 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Tournament {
+  id              Int         @id @default(autoincrement())
+  name            String
+  active          Boolean
+  description     String
+  is_for_nations  Boolean
+  phases          Phase[]
+}
+
+model Phase {
+  id              Int         @id @default(autoincrement())
+  name            String
+  tournament_id   Int
+  tournament      Tournament  @relation(fields: [tournament_id], references: [id])
+}
+
+model Team {
+  id              Int         @id @default(autoincrement())
+  name            String
+  country         String
+  is_nation       Boolean
+  home_games      Game[]      @relation("home_team")
+  away_games      Game[]      @relation("away_team")
+}
+
+model Game {
+  id              Int         @id @default(autoincrement())
+  home_team_id    Int
+  away_team_id    Int
+  home_score      Int
+  phase_id        Int
+  completed       Boolean
+  away_score      Int
+  date            DateTime
+  home_team       Team        @relation("home_team", fields: [home_team_id], references: [id])
+  away_team       Team        @relation("away_team", fields: [away_team_id], references: [id])
+}
+
+model Lobby {
+  id              Int         @id @default(autoincrement())
+  owner_id        Int
+  tournament_id   Int
+  password        String
+  owner           User        @relation(fields: [owner_id], references: [id])
+  user_lobbies    UserLobby[]
+}
+
+model UserLobby {
+  id              Int         @id @default(autoincrement())
+  user_id         Int
+  lobby_id        Int
+  user            User        @relation(fields: [user_id], references: [id])
+  lobby           Lobby       @relation(fields: [lobby_id], references: [id])
 }
