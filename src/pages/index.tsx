@@ -1,6 +1,13 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
+} from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
 import { useSession, signIn, signOut } from "next-auth/react"
+import { ChevronRightIcon } from "@chakra-ui/icons"
 // import Image from 'next/image'
 // import styles from '../styles/Home.module.css'
 
@@ -13,6 +20,24 @@ const Home: NextPage = () => {
         <meta name="description" content="NoTerafoQuinielas" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <header>
+        <Breadcrumb
+          spacing="8px"
+          separator={<ChevronRightIcon color="gray.500" />}
+        >
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </header>
       <main>
         {session && (
           <>
@@ -20,13 +45,17 @@ const Home: NextPage = () => {
             <p>
               Coming <code>soon</code>
             </p>
-            <button onClick={() => signOut()}>Sign out</button>
+            <Button colorScheme="blue" onClick={() => signOut()}>
+              Sign out
+            </Button>
           </>
         )}
         {!session && (
           <>
             Not signed in <br />
-            <button onClick={() => signIn()}>Sign in</button>
+            <Button colorScheme="blue" onClick={() => signIn()}>
+              Sign in
+            </Button>
           </>
         )}
       </main>
