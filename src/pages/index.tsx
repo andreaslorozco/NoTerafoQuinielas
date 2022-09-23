@@ -1,13 +1,9 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Button,
-} from "@chakra-ui/react"
+import { Box, Button, Heading } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Head from "next/head"
-import { useSession, signIn, signOut } from "next-auth/react"
-import { ChevronRightIcon } from "@chakra-ui/icons"
+import { useSession, signIn } from "next-auth/react"
+import Navbar from "../components/Navbar"
+import NextLink from "next/link"
 // import Image from 'next/image'
 // import styles from '../styles/Home.module.css'
 
@@ -20,35 +16,19 @@ const Home: NextPage = () => {
         <meta name="description" content="NoTerafoQuinielas" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header>
-        <Breadcrumb
-          spacing="8px"
-          separator={<ChevronRightIcon color="gray.500" />}
-        >
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Docs</BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </header>
+      <Navbar />
       <main>
         {session && (
-          <>
-            <h1>Welcome to NoTerafoQuinielas</h1>
-            <p>
-              Coming <code>soon</code>
-            </p>
-            <Button colorScheme="blue" onClick={() => signOut()}>
-              Sign out
-            </Button>
-          </>
+          <Box mt={"2em"}>
+            <Heading size="lg">
+              Welcome, {session.user?.name.split(" ")[0]}
+            </Heading>
+            <Box mt={"2em"}>
+              <NextLink href="/my-groups" passHref>
+                <Button colorScheme="blue">Go to My Groups</Button>
+              </NextLink>
+            </Box>
+          </Box>
         )}
         {!session && (
           <>
@@ -60,12 +40,9 @@ const Home: NextPage = () => {
         )}
       </main>
       <footer>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        {/* <a href="#" target="_blank" rel="noopener noreferrer">
           Built with ❤️ by andreaslorozco
-          <span>
-            {/* <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} /> */}
-          </span>
-        </a>
+        </a> */}
       </footer>
     </div>
   )
