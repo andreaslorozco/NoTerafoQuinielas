@@ -1,6 +1,6 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import type { NextPage } from "next"
+import Head from "next/head"
+import { useSession, signIn, signOut } from "next-auth/react"
 // import Image from 'next/image'
 // import styles from '../styles/Home.module.css'
 
@@ -16,33 +16,22 @@ const Home: NextPage = () => {
       <main>
         {session && (
           <>
-            <h1>
-              Welcome to NoTerafoQuinielas
-            </h1>
+            <h1>Welcome to NoTerafoQuinielas</h1>
             <p>
-              Coming{' '}
-              <code>soon</code>
+              Coming <code>soon</code>
             </p>
-            <button onClick={() => signOut()}>
-              Sign out
-            </button>
+            <button onClick={() => signOut()}>Sign out</button>
           </>
         )}
         {!session && (
           <>
             Not signed in <br />
-            <button onClick={() => signIn()}>
-              Sign in
-            </button>
+            <button onClick={() => signIn()}>Sign in</button>
           </>
         )}
       </main>
       <footer>
-        <a
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="#" target="_blank" rel="noopener noreferrer">
           Built with ❤️ by andreaslorozco
           <span>
             {/* <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} /> */}
