@@ -17,9 +17,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <main>
+      <Box mt={"2em"} as="main">
         {session && (
-          <Box mt={"2em"}>
+          <>
             <Heading size="lg">
               Welcome, {session.user?.name.split(" ")[0]}
             </Heading>
@@ -28,17 +28,16 @@ const Home: NextPage = () => {
                 <Button colorScheme="blue">Go to My Groups</Button>
               </NextLink>
             </Box>
-          </Box>
+          </>
         )}
         {!session && (
           <>
-            Not signed in <br />
-            <Button colorScheme="blue" onClick={() => signIn()}>
+            <Button colorScheme="blue" onClick={() => signIn()} mt={"1em"}>
               Sign in
             </Button>
           </>
         )}
-      </main>
+      </Box>
       <footer>
         {/* <a href="#" target="_blank" rel="noopener noreferrer">
           Built with ❤️ by andreaslorozco

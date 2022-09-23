@@ -9,9 +9,10 @@ import {
   Text,
 } from "@chakra-ui/react"
 import CustomMenuItem from "./CustomMenuItem"
-import { signOut } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 
 const Navbar = () => {
+  const { data: session } = useSession()
   return (
     <Flex as="nav" height="8" alignItems="center">
       <Menu>
@@ -28,7 +29,12 @@ const Navbar = () => {
         <MenuList>
           <CustomMenuItem to="/">Home</CustomMenuItem>
           <CustomMenuItem to="/my-groups">My Groups</CustomMenuItem>
-          <CustomMenuItem onClick={() => signOut()}>Logout</CustomMenuItem>
+          {!session && (
+            <CustomMenuItem onClick={() => signIn()}>Log in</CustomMenuItem>
+          )}
+          {session && (
+            <CustomMenuItem onClick={() => signOut()}>Logout</CustomMenuItem>
+          )}
         </MenuList>
       </Menu>
     </Flex>
