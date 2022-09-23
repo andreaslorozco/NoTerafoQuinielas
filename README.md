@@ -35,14 +35,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## prisma migrations
 
-* modify `prisma/schema.prisma`
-* run `npx prisma generate` to generate the prisma client
-* create and run migrations with `npx prisma migrate dev`
+- modify `prisma/schema.prisma`
+- run `npx prisma generate` to generate the prisma client
+- create and run migrations with `npx prisma migrate dev`
 
 ## local postresql
 
 run `docker-compose up`
 
 ### misc commands
+
 `docker network ls`
 `docker ps`
