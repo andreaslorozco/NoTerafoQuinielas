@@ -10,7 +10,7 @@ const MyLobbies = () => {
   // { session }: { session: Session }
   return (
     <>
-      <Box mt="40">
+      <Box mt={"2em"}>
         {/* <Alert status="info">
           <AlertIcon />
           Lobbies are coming soon. Get ready!

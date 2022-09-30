@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   const { data: session } = useSession()
   return (
     <>
-      <Box mt="40" as="main">
+      <Box as="main">
         {session && (
           <>
             <Heading size="lg">
@@ -56,11 +56,6 @@ const Home: NextPage = () => {
           </>
         )}
       </Box>
-      <footer>
-        {/* <a href="#" target="_blank" rel="noopener noreferrer">
-          Built with ❤️ by andreaslorozco
-        </a> */}
-      </footer>
     </>
   )
 }
