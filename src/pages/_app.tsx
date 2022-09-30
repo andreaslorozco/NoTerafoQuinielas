@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Navbar />
-        <Container boxSize="lg" mt={"2em"}>
+        <Container boxSize="lg" mt={"2em"} maxW="100%">
           <Component {...pageProps} />
         </Container>
       </SessionProvider>
