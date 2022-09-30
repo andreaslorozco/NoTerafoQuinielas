@@ -28,7 +28,9 @@ const Navbar = () => {
         />
         <MenuList>
           <CustomMenuItem to="/">Home</CustomMenuItem>
-          <CustomMenuItem to="/my-lobbies">My Lobbies</CustomMenuItem>
+          {session && (
+            <CustomMenuItem to="/my-lobbies">My Lobbies</CustomMenuItem>
+          )}
           {!session && (
             <CustomMenuItem onClick={() => signIn()}>Log in</CustomMenuItem>
           )}
