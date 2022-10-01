@@ -21,7 +21,7 @@ const Home: NextPage = () => {
                   Go to My Lobbies
                 </Button>
               </NextLink>
-              <NextLink href="/my-lobbies" passHref>
+              <NextLink href="/new-lobby" passHref>
                 <Button colorScheme="messenger" w="100%" mt={"1em"}>
                   Create a Lobby
                 </Button>
