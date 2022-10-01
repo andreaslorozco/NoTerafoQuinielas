@@ -15,7 +15,7 @@ import { signIn, signOut, useSession } from "next-auth/react"
 const Navbar = () => {
   const { data: session } = useSession()
   return (
-    <Container as="nav" maxW="container.md" height="8" mt="4">
+    <Container as="nav" maxW="container.md" height="8" mt="1em">
       <Flex alignItems="center">
         <Menu>
           <Text fontSize="lg" fontWeight="bold">

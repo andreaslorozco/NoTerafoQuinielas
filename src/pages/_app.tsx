@@ -1,10 +1,11 @@
 // import '../styles/globals.css'
-import { ChakraProvider, Container } from "@chakra-ui/react"
+import { ChakraProvider, Container, Flex } from "@chakra-ui/react"
 import { Session } from "next-auth"
 import { SessionProvider } from "next-auth/react"
 import Head from "next/head"
 import Navbar from "../components/Navbar"
 import theme from "../theme"
+import Footer from "../components/Footer"
 
 import type { AppProps } from "next/app"
 
@@ -17,10 +18,18 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
           <meta name="description" content="NoTerafoQuinielas" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Navbar />
-        <Container boxSize="lg" mt={"2em"} maxW="100%">
-          <Component {...pageProps} />
-        </Container>
+        <Flex
+          direction="column"
+          justifyContent="space-between"
+          height="100vh"
+          minH="545px"
+        >
+          <Navbar />
+          <Container maxW="100%" width="32rem">
+            <Component {...pageProps} />
+          </Container>
+          <Footer />
+        </Flex>
       </SessionProvider>
     </ChakraProvider>
   )
