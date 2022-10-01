@@ -38,9 +38,9 @@ model Session {
 }
 
 model Role {
-  id   Int    @id @default(autoincrement())
-  name String
-  user User?
+  id              Int    @id @default(autoincrement())
+  name            String
+  users           User[]
 }
 model User {
   id              Int         @id @default(autoincrement())
@@ -50,7 +50,7 @@ model User {
   image           String?
   accounts        Account[]
   sessions        Session[]
-  role_id         Int         @unique @default(1)
+  role_id         Int         @default(1)
   role            Role        @relation(fields: [role_id], references: [id])
   owned_lobbies   Lobby[]
   user_lobbies    UserLobby[]
