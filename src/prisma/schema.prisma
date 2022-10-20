@@ -106,7 +106,6 @@ model Lobby {
   id              Int         @id @default(autoincrement())
   owner_id        Int
   tournament_id   Int
-  password        String
   invite_code     String
   owner           User        @relation(fields: [owner_id], references: [id])
   user_lobbies    UserLobby[]
