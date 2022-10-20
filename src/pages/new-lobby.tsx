@@ -5,13 +5,19 @@ import {
   FormLabel,
   Input,
   Select,
+  Tooltip,
 } from "@chakra-ui/react"
-import { PrismaClient, Tournament } from "@prisma/client"
+import { Lobby, PrismaClient, Tournament } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "./api/auth/[...nextauth]"
 
-const NewLobby = ({ competitions }: { competitions: Tournament[] }) => {
+interface props {
+  competitions: Tournament[]
+  ownedLobbies: Lobby[]
+}
+
+const NewLobby = ({ competitions, ownedLobbies }: props) => {
   return (
     <div>
       <FormControl>
@@ -26,14 +32,20 @@ const NewLobby = ({ competitions }: { competitions: Tournament[] }) => {
         <FormLabel mt={4}>Name your Lobby</FormLabel>
         <Input type="text" />
         {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
-        <Button
-          mt={4}
-          colorScheme="teal"
-          // isLoading={props.isSubmitting}
-          type="submit"
+        <Tooltip
+          label="You can only create one Lobby"
+          isDisabled={!ownedLobbies}
         >
-          Create Lobby
-        </Button>
+          <Button
+            mt={4}
+            colorScheme="teal"
+            // isLoading={props.isSubmitting}
+            type="submit"
+            disabled={!!ownedLobbies}
+          >
+            Create Lobby
+          </Button>
+        </Tooltip>
       </FormControl>
     </div>
   )
@@ -49,6 +61,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   )
   const prisma = new PrismaClient()
   const competitions = await prisma.tournament.findMany()
+  const ownedLobbies = await prisma.lobby.findFirst({
+    where: {
+      owner_id: session.user.id,
+    },
+  })
   // redirect to the homepage if no session
   if (!session) {
     return {
@@ -61,6 +78,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       competitions,
+      ownedLobbies,
     },
   }
 }
