@@ -9,6 +9,7 @@ import {
 import { Lobby, PrismaClient, Tournament } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
+import Router from "next/router"
 import { MouseEventHandler, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
@@ -31,18 +32,25 @@ const NewLobby = ({ session, competitions, ownedLobbies }: props) => {
 
     setSubmitting(true)
 
-    const response = await fetch("http://localhost:3000/api/lobby", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        tournament_id: tournamentId,
-        invite_code: inviteCode,
-        owner_id: session.user.id,
-      }),
-    })
-    await response.json()
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lobby`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          tournament_id: tournamentId,
+          invite_code: inviteCode,
+          owner_id: session.user.id,
+        }),
+      }
+    )
+    const { newLobby } = await response.json()
 
-    setSubmitting(false)
+    if (newLobby) {
+      Router.push(`/lobby/${newLobby.id}`)
+    } else {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -66,7 +74,6 @@ const NewLobby = ({ session, competitions, ownedLobbies }: props) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
         <Tooltip
           label="You can only create one Lobby"
           isDisabled={!ownedLobbies}
