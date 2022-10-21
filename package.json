@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "prisma migrate dev && next dev",
-    "build": "prisma migrate deploy && next build",
-    "start": "prisma migrate deploy && next start",
+    "build": "prisma generate && prisma migrate deploy && next build",
+    "start": "prisma generate && prisma migrate deploy && next start",
     "lint": "next lint",
     "lint-fix": "eslint --fix ./src",
     "prepare": "husky install"
