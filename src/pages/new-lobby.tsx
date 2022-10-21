@@ -32,18 +32,15 @@ const NewLobby = ({ session, competitions, ownedLobbies }: props) => {
 
     setSubmitting(true)
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lobby`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          name,
-          tournament_id: tournamentId,
-          invite_code: inviteCode,
-          owner_id: session.user.id,
-        }),
-      }
-    )
+    const response = await fetch(`/api/lobby`, {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        tournament_id: tournamentId,
+        invite_code: inviteCode,
+        owner_id: session.user.id,
+      }),
+    })
     const { newLobby } = await response.json()
 
     if (newLobby) {
