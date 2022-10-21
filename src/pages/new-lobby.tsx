@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   Select,
@@ -9,28 +8,64 @@ import {
 } from "@chakra-ui/react"
 import { Lobby, PrismaClient, Tournament } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
-import { unstable_getServerSession } from "next-auth"
+import { Session, unstable_getServerSession } from "next-auth"
+import { MouseEventHandler, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 interface props {
+  session: Session
   competitions: Tournament[]
   ownedLobbies: Lobby[]
 }
 
-const NewLobby = ({ competitions, ownedLobbies }: props) => {
+const NewLobby = ({ session, competitions, ownedLobbies }: props) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [tournamentId, setTournamentId] = useState<number>(0)
+  const [name, setName] = useState("")
+  const inviteCode = (Math.random() + 1).toString(36).substring(6)
+
+  const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault()
+
+    if (name === "" || tournamentId === 0) return
+
+    setSubmitting(true)
+
+    const response = await fetch("http://localhost:3000/api/lobby", {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        tournament_id: tournamentId,
+        invite_code: inviteCode,
+        owner_id: session.user.id,
+      }),
+    })
+    await response.json()
+
+    setSubmitting(false)
+  }
+
   return (
     <div>
       <FormControl>
         <FormLabel>Competition</FormLabel>
-        <Select placeholder="Select a Competition">
+        <Select
+          placeholder="Select a Competition"
+          onChange={(e) => setTournamentId(+e.target.value)}
+          value={tournamentId}
+        >
           {competitions.map((c) => (
-            <option key={c.id} value={c.name}>
+            <option key={c.id} value={c.id}>
               {c.name}
             </option>
           ))}
         </Select>
         <FormLabel mt={4}>Name your Lobby</FormLabel>
-        <Input type="text" />
+        <Input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
         <Tooltip
           label="You can only create one Lobby"
@@ -39,9 +74,10 @@ const NewLobby = ({ competitions, ownedLobbies }: props) => {
           <Button
             mt={4}
             colorScheme="teal"
-            // isLoading={props.isSubmitting}
+            isLoading={submitting}
             type="submit"
             disabled={!!ownedLobbies}
+            onClick={handleSubmit}
           >
             Create Lobby
           </Button>
@@ -77,6 +113,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   return {
     props: {
+      session,
       competitions,
       ownedLobbies,
     },
