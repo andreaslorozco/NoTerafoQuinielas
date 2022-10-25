@@ -16,17 +16,22 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Lobby } from "@prisma/client"
-import { unstable_getServerSession } from "next-auth"
+import { Lobby, UserLobby } from "@prisma/client"
+import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next/types"
 import { useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import NextLink from "next/link"
 
-const LobbyPage = () => {
+interface Props {
+  session: Session
+}
+
+const LobbyPage = ({ session }: Props) => {
   const router = useRouter()
   const [lobby, setLobby] = useState<Lobby>(null)
+  const [userLobby, setUserLobby] = useState<UserLobby>(null)
 
   useEffect(() => {
     const { id } = router.query
@@ -40,7 +45,35 @@ const LobbyPage = () => {
     getLobby()
   }, [router.query])
 
+  useEffect(() => {
+    const userId = session.user.id
+    const userLobbyId = router.query.id
+    const getUserLobby = async () => {
+      const response = await fetch(
+        `/api/user/${userId}/user-lobby/${userLobbyId}`,
+        {
+          method: "GET",
+        }
+      )
+      const { userLobby } = await response.json()
+      setUserLobby(userLobby)
+    }
+    getUserLobby()
+  })
+
+  // return nothing if lobby doesn't exist
   if (!lobby) return null
+
+  // return join lobby form if lobby exist and
+  // user is not part of lobby or user is not lobby owner
+  const isLobbyOwner = lobby?.owner_id === session.user.id
+  if (!userLobby && !isLobbyOwner) {
+    return (
+      <div>
+        <h1>You are not part of this lobby!</h1>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -67,6 +100,7 @@ const LobbyPage = () => {
         </NextLink>
       </Box>
       <Box mt={"2em"}>
+        {/* TODO: make dynamic */}
         <TableContainer>
           <Table variant="simple">
             <TableCaption>Ranking</TableCaption>
