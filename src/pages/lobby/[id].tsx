@@ -69,9 +69,11 @@ const LobbyPage = ({ session }: Props) => {
   const isLobbyOwner = lobby?.owner_id === session.user.id
   if (!userLobby && !isLobbyOwner) {
     return (
-      <div>
-        <h1>You are not part of this lobby!</h1>
-      </div>
+      <NextLink href="/join-lobby/5" passHref>
+        <Button colorScheme="blue" w="100%">
+          Join this Lobby
+        </Button>
+      </NextLink>
     )
   }
 
@@ -88,11 +90,13 @@ const LobbyPage = ({ session }: Props) => {
         </Stat>
       </Box>
       <Box mt={"2em"}>
-        <NextLink href="/my-lobbies" passHref>
-          <Button colorScheme="blue" w="100%" disabled>
-            Send Invite
-          </Button>
-        </NextLink>
+        {isLobbyOwner && (
+          <NextLink href="/my-lobbies" passHref>
+            <Button colorScheme="blue" w="100%" disabled>
+              Send Invite
+            </Button>
+          </NextLink>
+        )}
         <NextLink href="/new-lobby" passHref>
           <Button colorScheme="messenger" w="100%" mt={"1em"} disabled>
             Add a Guess
