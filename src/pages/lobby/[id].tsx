@@ -3,6 +3,7 @@ import {
   Button,
   Heading,
   Stat,
+  StatGroup,
   StatHelpText,
   StatLabel,
   StatNumber,
@@ -78,16 +79,25 @@ const LobbyPage = ({ session }: Props) => {
   }
 
   return (
-    <>
+    <Box mt={"2em"}>
       <Heading size="lg">{lobby.name}</Heading>
       <Box mt={"2em"}>
-        <Stat>
-          <StatLabel>Invite Code</StatLabel>
-          <StatNumber>{lobby.invite_code}</StatNumber>
-          <StatHelpText>
-            Your friends will need this code to join the lobby.
-          </StatHelpText>
-        </Stat>
+        <StatGroup>
+          <Stat>
+            <StatLabel>Lobby ID</StatLabel>
+            <StatNumber>{lobby.id}</StatNumber>
+            <StatHelpText>
+              Your friends will need this ID to join the lobby.
+            </StatHelpText>
+          </Stat>
+          <Stat>
+            <StatLabel>Invite Code</StatLabel>
+            <StatNumber>{lobby.invite_code}</StatNumber>
+            <StatHelpText>
+              Your friends will need this code to join the lobby.
+            </StatHelpText>
+          </Stat>
+        </StatGroup>
       </Box>
       <Box mt={"2em"}>
         {isLobbyOwner && (
@@ -137,7 +147,7 @@ const LobbyPage = ({ session }: Props) => {
           </Table>
         </TableContainer>
       </Box>
-    </>
+    </Box>
   )
 }
 
