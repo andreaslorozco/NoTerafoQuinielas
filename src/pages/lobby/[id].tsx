@@ -17,7 +17,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Lobby, UserLobby } from "@prisma/client"
+import { Lobby, User, UserLobby } from "@prisma/client"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next/types"
@@ -33,6 +33,8 @@ const LobbyPage = ({ session }: Props) => {
   const router = useRouter()
   const [lobby, setLobby] = useState<Lobby>(null)
   const [userLobby, setUserLobby] = useState<UserLobby>(null)
+  const [users, setUsers] = useState<User[]>([])
+  const [usersFetched, setUsersFetched] = useState(false)
 
   useEffect(() => {
     const { id } = router.query
@@ -44,6 +46,14 @@ const LobbyPage = ({ session }: Props) => {
       setLobby(lobby)
     }
     getLobby()
+
+    const getUsers = async () => {
+      const response = await fetch(`/api/lobby/${id}/users`, { method: "GET" })
+      const { users } = await response.json()
+      setUsers(users)
+    }
+    getUsers()
+    setUsersFetched(true)
   }, [router.query])
 
   useEffect(() => {
@@ -60,7 +70,7 @@ const LobbyPage = ({ session }: Props) => {
       setUserLobby(userLobby)
     }
     getUserLobby()
-  })
+  }, [session.user.id, router.query.id])
 
   // return nothing if lobby doesn't exist
   if (!lobby) return null
@@ -114,7 +124,6 @@ const LobbyPage = ({ session }: Props) => {
         </NextLink>
       </Box>
       <Box mt={"2em"}>
-        {/* TODO: make dynamic */}
         <TableContainer>
           <Table variant="simple">
             <TableCaption>Ranking</TableCaption>
@@ -125,18 +134,13 @@ const LobbyPage = ({ session }: Props) => {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>Marcelo</Td>
-                <Td isNumeric>25</Td>
-              </Tr>
-              <Tr>
-                <Td>Diego</Td>
-                <Td isNumeric>25</Td>
-              </Tr>
-              <Tr>
-                <Td>Andreas</Td>
-                <Td isNumeric>25</Td>
-              </Tr>
+              {usersFetched &&
+                users.map((u) => (
+                  <Tr key={u.id}>
+                    <Td>{u.name.split(" ")[0]}</Td>
+                    <Td isNumeric>0</Td>
+                  </Tr>
+                ))}
             </Tbody>
             <Tfoot>
               <Tr>
