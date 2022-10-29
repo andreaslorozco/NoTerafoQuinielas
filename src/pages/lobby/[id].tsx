@@ -72,6 +72,18 @@ const LobbyPage = ({ session }: Props) => {
     getUserLobby()
   }, [session.user.id, router.query.id])
 
+  const handleShareClick = () => {
+    if (navigator.canShare) {
+      navigator.share({
+        title: "Join my Lobby!",
+        text: "Center-half soccer three-five-two referee hat trick chip African Cup of Nations",
+        url: "https://www.noterafoquinielas.com/join-lobby?id=1&invite_code=i3dl38k",
+      })
+    } else {
+      console.log("CANT SHARE", navigator.canShare)
+    }
+  }
+
   // return nothing if lobby doesn't exist
   if (!lobby) return null
 
@@ -111,11 +123,11 @@ const LobbyPage = ({ session }: Props) => {
       </Box>
       <Box mt={"2em"}>
         {isLobbyOwner && (
-          <NextLink href="/my-lobbies" passHref>
-            <Button colorScheme="blue" w="100%" disabled>
-              Send Invite
-            </Button>
-          </NextLink>
+          // <NextLink href="/my-lobbies" passHref>
+          <Button colorScheme="blue" w="100%" onClick={handleShareClick}>
+            Send Invite
+          </Button>
+          // </NextLink>
         )}
         <NextLink
           href={`/tournament/${lobby.tournament_id}/prediction`}
