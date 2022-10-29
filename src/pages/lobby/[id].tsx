@@ -117,9 +117,12 @@ const LobbyPage = ({ session }: Props) => {
             </Button>
           </NextLink>
         )}
-        <NextLink href="/new-lobby" passHref>
-          <Button colorScheme="messenger" w="100%" mt={"1em"} disabled>
-            Add a Guess
+        <NextLink
+          href={`/tournament/${lobby.tournament_id}/prediction`}
+          passHref
+        >
+          <Button colorScheme="messenger" w="100%" mt={"1em"}>
+            Add a Prediction
           </Button>
         </NextLink>
       </Box>
