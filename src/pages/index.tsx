@@ -2,8 +2,7 @@ import { Box, Button, Heading } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import { useSession, signIn, signOut } from "next-auth/react"
 import NextLink from "next/link"
-// import Image from 'next/image'
-// import styles from '../styles/Home.module.css'
+import Head from "next/head"
 
 const Home: NextPage = () => {
   const { data: session } = useSession()
@@ -12,6 +11,9 @@ const Home: NextPage = () => {
       <Box as="main">
         {session && (
           <>
+            <Head>
+              <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+            </Head>
             <Heading size="lg">
               Welcome, {session.user?.name.split(" ")[0]}!
             </Heading>
