@@ -3,15 +3,14 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Input,
   Select,
   Spinner,
   Tooltip,
 } from "@chakra-ui/react"
 import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
-import { Session, unstable_getServerSession } from "next-auth"
-import Router, { useRouter } from "next/router"
+import { unstable_getServerSession } from "next-auth"
+import { useRouter } from "next/router"
 import {
   ChangeEventHandler,
   MouseEventHandler,
@@ -25,13 +24,13 @@ interface GameWithTeams extends Game {
   away_team: Team
 }
 
-interface Props {
-  session: Session
-}
+// interface Props {
+//   session: Session
+// }
 
-const Prediction = ({ session }: Props) => {
+const Prediction = () => {
   const router = useRouter()
-  const [submitting, setSubmitting] = useState(false)
+  const [submitting] = useState(false)
   const [phases, setPhases] = useState<Phase[]>([])
   const [selectedPhaseId, setSelectedPhaseId] = useState<number>(0)
   const [games, setGames] = useState<GameWithTeams[]>([])
