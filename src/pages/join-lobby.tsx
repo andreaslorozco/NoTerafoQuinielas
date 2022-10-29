@@ -1,8 +1,15 @@
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  useToast,
+} from "@chakra-ui/react"
 import { GetServerSidePropsContext } from "next"
+import { useRouter } from "next/router"
 import { Session, unstable_getServerSession } from "next-auth"
 import Router from "next/router"
-import { MouseEventHandler, useState } from "react"
+import { MouseEventHandler, useEffect, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 interface props {
@@ -10,6 +17,8 @@ interface props {
 }
 
 const JoinLobby = ({ session }: props) => {
+  const router = useRouter()
+  const toast = useToast()
   const [submitting, setSubmitting] = useState(false)
   const [id, setId] = useState<string>("")
   const [inviteCode, setInviteCode] = useState<string>("")
@@ -27,16 +36,57 @@ const JoinLobby = ({ session }: props) => {
       `/api/user/${session.user.id}/user-lobby/${id}`,
       {
         method: "POST",
+        body: inviteCode,
       }
     )
-    const { joinedLobby } = await response.json()
+    const { joinedLobby, error } = await response.json()
 
     if (joinedLobby) {
       Router.push(`/lobby/${id}`)
     } else {
       setSubmitting(false)
+      toast({
+        title: error,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      })
     }
   }
+
+  useEffect(() => {
+    const { id: idParam, invite_code: inviteCodeParam } = router.query
+
+    const postUserLobby = async () => {
+      if (typeof idParam === "string" && typeof inviteCodeParam === "string") {
+        setId(idParam)
+        setInviteCode(inviteCodeParam)
+        setSubmitting(true)
+
+        const response = await fetch(
+          `/api/user/${session.user.id}/user-lobby/${idParam}`,
+          {
+            method: "POST",
+            body: inviteCodeParam,
+          }
+        )
+        const { joinedLobby, error } = await response.json()
+
+        if (joinedLobby) {
+          Router.push(`/lobby/${idParam}`)
+        } else {
+          setSubmitting(false)
+          toast({
+            title: error,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          })
+        }
+      }
+    }
+    postUserLobby()
+  }, [router.query, session.user.id, toast])
 
   return (
     <div>
