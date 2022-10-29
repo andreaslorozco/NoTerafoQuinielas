@@ -76,7 +76,7 @@ const LobbyPage = ({ session }: Props) => {
     if (navigator.share) {
       navigator.share({
         title: "Join the Lobby!",
-        url: `https://www.noterafoquinielas.com/join-lobby?id=${id}&invite_code=${lobby.invite_code}`,
+        url: `https://www.noterafoquinielas.com/join-lobby?id=${lobby.id}&invite_code=${lobby.invite_code}`,
       })
     }
   }
