@@ -9,8 +9,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  const prisma = new PrismaClient()
+  if (req.method === "GET") {
+    const { user_id: userId, game_id: gameId } = req.query
+    const prediction = await prisma.prediction.findFirst({
+      where: {
+        user_id: +userId,
+        game_id: +gameId,
+      },
+    })
+    res.status(200).json({ prediction })
+  }
   if (req.method === "POST") {
-    const prisma = new PrismaClient()
     const { userId, gameId, homeScore, awayScore } = JSON.parse(req.body)
 
     const existingPrediction = await prisma.prediction.findFirst({
@@ -21,7 +31,6 @@ export default async function handler(
     })
 
     if (existingPrediction) {
-      console.log("PREDICTION FOUND")
       const prediction = await prisma.prediction.update({
         data: {
           home_score: homeScore,
@@ -33,7 +42,6 @@ export default async function handler(
       })
       res.status(200).json({ prediction })
     } else {
-      console.log("NO PREDICTION FOUND!!")
       const prediction = await prisma.prediction.create({
         data: {
           home_score: homeScore,
