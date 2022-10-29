@@ -1,4 +1,4 @@
-import { Prediction, prisma, PrismaClient } from "@prisma/client"
+import { Prediction, PrismaClient } from "@prisma/client"
 import type { NextApiRequest, NextApiResponse } from "next"
 
 type Data = {
