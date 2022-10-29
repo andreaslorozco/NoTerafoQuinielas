@@ -6,7 +6,7 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { Game, Team } from "@prisma/client"
-import { MouseEventHandler, useState } from "react"
+import { MouseEventHandler, useEffect, useState } from "react"
 
 interface Props {
   game: GameWithTeams
@@ -22,7 +22,24 @@ const PredictionForm = ({ game, userId }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [homeScore, setHomeScore] = useState(0)
   const [awayScore, setAwayScore] = useState(0)
+  const [predictionFetched, setPredictionFetched] = useState(false)
   const toast = useToast()
+
+  useEffect(() => {
+    const getPrediction = async () => {
+      const response = await fetch(
+        `/api/prediction?user_id=${userId}&game_id=${game.id}`,
+        { method: "GET" }
+      )
+      const { prediction } = await response.json()
+      if (prediction) {
+        setHomeScore(prediction.home_score)
+        setAwayScore(prediction.away_score)
+      }
+      setPredictionFetched(true)
+    }
+    getPrediction()
+  }, [userId, game.id])
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
@@ -48,7 +65,7 @@ const PredictionForm = ({ game, userId }: Props) => {
 
   return (
     <FormControl display="flex" as="form" mt="1em">
-      <FormLabel display="inline-block" width="25%">
+      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
         {game.home_team.name}
       </FormLabel>
       <Input
@@ -58,8 +75,9 @@ const PredictionForm = ({ game, userId }: Props) => {
         mr={"1em"}
         value={homeScore.toString()}
         onChange={(e) => setHomeScore(e.target.valueAsNumber)}
+        disabled={!predictionFetched}
       />
-      <FormLabel display="inline-block" width="25%">
+      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
         {game.away_team.name}
       </FormLabel>
       <Input
@@ -69,6 +87,7 @@ const PredictionForm = ({ game, userId }: Props) => {
         mr={"1em"}
         value={awayScore.toString()}
         onChange={(e) => setAwayScore(e.target.valueAsNumber)}
+        disabled={!predictionFetched}
       />
       <Button
         colorScheme="teal"
