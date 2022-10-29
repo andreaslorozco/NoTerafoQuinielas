@@ -5,18 +5,13 @@ import {
   FormLabel,
   Select,
   Spinner,
-  Tooltip,
 } from "@chakra-ui/react"
 import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
-import { unstable_getServerSession } from "next-auth"
+import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
-import {
-  ChangeEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react"
+import { ChangeEventHandler, useEffect, useState } from "react"
+import PredictionForm from "../../../components/PredictionForm"
 import { authOptions } from "../../api/auth/[...nextauth]"
 
 interface GameWithTeams extends Game {
@@ -24,13 +19,12 @@ interface GameWithTeams extends Game {
   away_team: Team
 }
 
-// interface Props {
-//   session: Session
-// }
+interface Props {
+  session: Session
+}
 
-const Prediction = () => {
+const Prediction = ({ session }: Props) => {
   const router = useRouter()
-  const [submitting] = useState(false)
   const [phases, setPhases] = useState<Phase[]>([])
   const [selectedPhaseId, setSelectedPhaseId] = useState<number>(0)
   const [games, setGames] = useState<GameWithTeams[]>([])
@@ -66,31 +60,6 @@ const Prediction = () => {
     setSelectedPhaseId(+e.target.value)
   }
 
-  const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
-    e.preventDefault()
-
-    // if (name === "" || tournamentId === 0) return
-
-    // setSubmitting(true)
-
-    // const response = await fetch(`/api/lobby`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     name,
-    //     tournament_id: tournamentId,
-    //     invite_code: inviteCode,
-    //     owner_id: session.user.id,
-    //   }),
-    // })
-    // const { newLobby } = await response.json()
-
-    // if (newLobby) {
-    //   Router.push(`/lobby/${newLobby.id}`)
-    // } else {
-    //   setSubmitting(false)
-    // }
-  }
-
   return (
     <div>
       <FormControl>
@@ -107,7 +76,6 @@ const Prediction = () => {
           ))}
         </Select>
         <FormLabel mt={4}>Enter your predictions</FormLabel>
-        {/* TODO */}
         {fetchingGames && (
           <Flex justifyContent={"center"}>
             <Spinner />
@@ -119,28 +87,8 @@ const Prediction = () => {
           </Button>
         )}
         {games.map((g) => (
-          <div key={g.id}>
-            {g.home_team.name} | {g.home_score} | {g.away_team.name} |{" "}
-            {g.away_score}
-          </div>
+          <PredictionForm key={g.id} game={g} userId={session.user.id} />
         ))}
-        {/* <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        /> */}
-        <Tooltip label="Coming soon!" isDisabled={true}>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={submitting}
-            type="submit"
-            disabled={false}
-            onClick={handleSubmit}
-          >
-            Save
-          </Button>
-        </Tooltip>
       </FormControl>
     </div>
   )
