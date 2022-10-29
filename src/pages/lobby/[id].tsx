@@ -73,14 +73,11 @@ const LobbyPage = ({ session }: Props) => {
   }, [session.user.id, router.query.id])
 
   const handleShareClick = () => {
-    if (navigator.canShare) {
+    if (navigator.share) {
       navigator.share({
-        title: "Join my Lobby!",
-        text: "Center-half soccer three-five-two referee hat trick chip African Cup of Nations",
-        url: "https://www.noterafoquinielas.com/join-lobby?id=1&invite_code=i3dl38k",
+        title: "Join the Lobby!",
+        url: `https://www.noterafoquinielas.com/join-lobby?id=${lobby.id}&invite_code=${lobby.invite_code}`,
       })
-    } else {
-      console.log("CANT SHARE", navigator.canShare)
     }
   }
 
