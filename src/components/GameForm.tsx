@@ -8,7 +8,7 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { Game, Team } from "@prisma/client"
-import { MouseEventHandler, useEffect, useState } from "react"
+import { MouseEventHandler, useState } from "react"
 
 interface Props {
   game: GameWithTeams
@@ -21,27 +21,10 @@ interface GameWithTeams extends Game {
 
 const GameForm = ({ game }: Props) => {
   const [submitting, setSubmitting] = useState(false)
-  const [homeScore, setHomeScore] = useState(0)
-  const [awayScore, setAwayScore] = useState(0)
-  const [gameCompleted, setGameCompleted] = useState(false)
-  const [gameFetched, setGameFetched] = useState(false)
+  const [homeScore, setHomeScore] = useState(game.home_score)
+  const [awayScore, setAwayScore] = useState(game.away_score)
+  const [gameCompleted, setGameCompleted] = useState(!!game.completed)
   const toast = useToast()
-
-  useEffect(() => {
-    const getGame = async () => {
-      const response = await fetch(`/api/game/${game.id}`, { method: "GET" })
-      const { game: fetchedGame } = (await response.json()) as {
-        game: GameWithTeams
-      }
-      if (fetchedGame) {
-        setHomeScore(fetchedGame.home_score)
-        setAwayScore(fetchedGame.away_score)
-        setGameCompleted(!!fetchedGame.completed)
-      }
-      setGameFetched(true)
-    }
-    getGame()
-  }, [game.id])
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
@@ -76,7 +59,6 @@ const GameForm = ({ game }: Props) => {
         mr={"1em"}
         value={homeScore.toString()}
         onChange={(e) => setHomeScore(e.target.valueAsNumber)}
-        disabled={!gameFetched}
       />
       <FormLabel display="flex" width="25%" mb={0} alignItems="center">
         {game.away_team.name}
@@ -88,12 +70,10 @@ const GameForm = ({ game }: Props) => {
         mr={"1em"}
         value={awayScore.toString()}
         onChange={(e) => setAwayScore(e.target.valueAsNumber)}
-        disabled={!gameFetched}
       />
       <Tooltip label="Completed?">
         <Checkbox
           mr={"1em"}
-          disabled={!gameFetched}
           isChecked={gameCompleted}
           onChange={(e) => setGameCompleted(e.target.checked)}
         />
