@@ -10,7 +10,12 @@ import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
-import { ChangeEventHandler, useEffect, useState } from "react"
+import {
+  ChangeEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react"
 import GameForm from "../../../components/GameForm"
 import { authOptions } from "../../api/auth/[...nextauth]"
 
@@ -25,6 +30,7 @@ const GameAdminPage = () => {
   const [selectedPhaseId, setSelectedPhaseId] = useState<number>(0)
   const [games, setGames] = useState<GameWithTeams[]>([])
   const [fetchingGames, setFetchingGames] = useState(false)
+  const [processingGames, setProcessingGames] = useState(false)
 
   useEffect(() => {
     const { id } = router.query
@@ -56,6 +62,18 @@ const GameAdminPage = () => {
     setSelectedPhaseId(+e.target.value)
   }
 
+  const handleProcessScores: MouseEventHandler<
+    HTMLButtonElement
+  > = async () => {
+    setProcessingGames(true)
+    const response = await fetch("/api/process-scores", {
+      method: "POST",
+      body: JSON.stringify({ games }),
+    })
+    await response.json()
+    setProcessingGames(false)
+  }
+
   return (
     <div>
       <FormControl>
@@ -80,6 +98,16 @@ const GameAdminPage = () => {
         {!selectedPhaseId && (
           <Button colorScheme="blue" w="100%" disabled>
             Select a Stage from the list above
+          </Button>
+        )}
+        {!!selectedPhaseId && games.length > 0 && (
+          <Button
+            colorScheme="blue"
+            w="100%"
+            onClick={handleProcessScores}
+            disabled={processingGames}
+          >
+            Process Scores
           </Button>
         )}
         {games.map((g) => (
