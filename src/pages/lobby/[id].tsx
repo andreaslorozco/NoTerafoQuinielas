@@ -151,6 +151,7 @@ const LobbyPage = ({ session }: Props) => {
               {usersFetched &&
                 users.map((u) => {
                   const score = predictions.reduce((acc, p) => {
+                    if (p.user_id !== u.id) return acc
                     return acc + p.score
                   }, 0)
                   return (
