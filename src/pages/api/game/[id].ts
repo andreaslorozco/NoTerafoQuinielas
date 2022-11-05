@@ -5,6 +5,12 @@ type Data = {
   game: Game
 }
 
+interface ParsedBody {
+  homeScore: number
+  awayScore: number
+  gameCompleted: boolean
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -21,7 +27,9 @@ export default async function handler(
     res.status(200).json({ game })
   }
   if (req.method === "POST") {
-    const { homeScore, awayScore } = JSON.parse(req.body)
+    const { homeScore, awayScore, gameCompleted }: ParsedBody = JSON.parse(
+      req.body
+    )
 
     const prisma = new PrismaClient()
 
@@ -29,6 +37,7 @@ export default async function handler(
       data: {
         home_score: homeScore,
         away_score: awayScore,
+        completed: gameCompleted,
       },
       where: {
         id,
