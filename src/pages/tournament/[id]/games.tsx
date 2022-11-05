@@ -99,7 +99,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     authOptions
   )
   // redirect to the homepage if no session
-  if (!session) {
+  // or if not admin (I think there's a middleware for that?)
+  if (!session || session.user.role_id !== 2) {
     return {
       redirect: {
         destination: "/",
