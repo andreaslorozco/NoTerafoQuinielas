@@ -17,7 +17,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Lobby, User, UserLobby } from "@prisma/client"
+import { Lobby, Prediction, User, UserLobby } from "@prisma/client"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next/types"
@@ -35,6 +35,7 @@ const LobbyPage = ({ session }: Props) => {
   const [userLobby, setUserLobby] = useState<UserLobby>(null)
   const [users, setUsers] = useState<User[]>([])
   const [usersFetched, setUsersFetched] = useState(false)
+  const [predictions, setPredictions] = useState<Prediction[]>([])
 
   useEffect(() => {
     const { id } = router.query
@@ -49,8 +50,9 @@ const LobbyPage = ({ session }: Props) => {
 
     const getUsers = async () => {
       const response = await fetch(`/api/lobby/${id}/users`, { method: "GET" })
-      const { users } = await response.json()
+      const { users, predictions } = await response.json()
       setUsers(users)
+      setPredictions(predictions)
     }
     getUsers()
     setUsersFetched(true)
@@ -147,12 +149,17 @@ const LobbyPage = ({ session }: Props) => {
             </Thead>
             <Tbody>
               {usersFetched &&
-                users.map((u) => (
-                  <Tr key={u.id}>
-                    <Td>{u.name.split(" ")[0]}</Td>
-                    <Td isNumeric>0</Td>
-                  </Tr>
-                ))}
+                users.map((u) => {
+                  const score = predictions.reduce((acc, p) => {
+                    return acc + p.score
+                  }, 0)
+                  return (
+                    <Tr key={u.id}>
+                      <Td>{u.name.split(" ")[0]}</Td>
+                      <Td isNumeric>{score}</Td>
+                    </Tr>
+                  )
+                })}
             </Tbody>
             <Tfoot>
               <Tr>

@@ -79,6 +79,7 @@ model Phase {
   name            String
   tournament_id   Int
   tournament      Tournament  @relation(fields: [tournament_id], references: [id])
+  games           Game[]
 }
 
 model Team {
@@ -102,6 +103,7 @@ model Game {
   home_team       Team          @relation("home_team", fields: [home_team_id], references: [id])
   away_team       Team          @relation("away_team", fields: [away_team_id], references: [id])
   predictions     Prediction[]
+  phase           Phase         @relation(fields: [phase_id], references: [id])
 }
 
 model Lobby {
