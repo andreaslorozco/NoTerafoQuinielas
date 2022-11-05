@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
-import { Session, unstable_getServerSession } from "next-auth"
+import { unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useState } from "react"
 import GameForm from "../../../components/GameForm"
@@ -19,11 +19,7 @@ interface GameWithTeams extends Game {
   away_team: Team
 }
 
-interface Props {
-  session: Session
-}
-
-const GameAdminPage = ({ session }: Props) => {
+const GameAdminPage = () => {
   const router = useRouter()
   const [phases, setPhases] = useState<Phase[]>([])
   const [selectedPhaseId, setSelectedPhaseId] = useState<number>(0)
@@ -87,7 +83,7 @@ const GameAdminPage = ({ session }: Props) => {
           </Button>
         )}
         {games.map((g) => (
-          <GameForm key={g.id} game={g} userId={session.user.id} />
+          <GameForm key={g.id} game={g} />
         ))}
       </FormControl>
     </div>
@@ -112,8 +108,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
   return {
-    props: {
-      session,
-    },
+    props: {},
   }
 }
