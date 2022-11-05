@@ -17,7 +17,7 @@ export const authOptions = {
     async session({ session, user, token }) {
       const newSession = {
         ...session,
-        user: { id: user.id, ...session.user },
+        user: { ...session.user, id: user.id, role_id: user.role_id },
         ...token,
       }
       return newSession
