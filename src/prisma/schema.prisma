@@ -129,6 +129,7 @@ model Prediction {
   home_score      Int
   away_score      Int
   score           Int
+  processed       Boolean       @default(false)
   user            User          @relation(fields: [user_id], references: [id])
   game            Game          @relation(fields: [game_id], references: [id])
 }
