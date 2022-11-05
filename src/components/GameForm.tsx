@@ -1,8 +1,10 @@
 import {
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Input,
+  Tooltip,
   useToast,
 } from "@chakra-ui/react"
 import { Game, Team } from "@prisma/client"
@@ -21,16 +23,20 @@ const GameForm = ({ game }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [homeScore, setHomeScore] = useState(0)
   const [awayScore, setAwayScore] = useState(0)
+  const [gameCompleted, setGameCompleted] = useState(false)
   const [gameFetched, setGameFetched] = useState(false)
   const toast = useToast()
 
   useEffect(() => {
     const getGame = async () => {
       const response = await fetch(`/api/game/${game.id}`, { method: "GET" })
-      const { game: fetchedGame } = await response.json()
+      const { game: fetchedGame } = (await response.json()) as {
+        game: GameWithTeams
+      }
       if (fetchedGame) {
         setHomeScore(fetchedGame.home_score)
         setAwayScore(fetchedGame.away_score)
+        setGameCompleted(!!fetchedGame.completed)
       }
       setGameFetched(true)
     }
@@ -45,6 +51,7 @@ const GameForm = ({ game }: Props) => {
       body: JSON.stringify({
         homeScore,
         awayScore,
+        gameCompleted,
       }),
     })
     await response.json()
@@ -83,6 +90,14 @@ const GameForm = ({ game }: Props) => {
         onChange={(e) => setAwayScore(e.target.valueAsNumber)}
         disabled={!gameFetched}
       />
+      <Tooltip label="Completed?">
+        <Checkbox
+          mr={"1em"}
+          disabled={!gameFetched}
+          isChecked={gameCompleted}
+          onChange={(e) => setGameCompleted(e.target.checked)}
+        />
+      </Tooltip>
       <Button
         colorScheme="teal"
         isLoading={submitting}
