@@ -24,6 +24,7 @@ import { GetServerSidePropsContext } from "next/types"
 import { useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import NextLink from "next/link"
+import UserLink from "../../components/UserLink"
 
 interface Props {
   session: Session
@@ -156,7 +157,14 @@ const LobbyPage = ({ session }: Props) => {
                   }, 0)
                   return (
                     <Tr key={u.id}>
-                      <Td>{u.name.split(" ")[0]}</Td>
+                      {/* <Td>{u.name.split(" ")[0]}</Td> */}
+                      <Td>
+                        <UserLink
+                          username={u.name.split(" ")[0]}
+                          tournamentId={lobby.tournament_id}
+                          userId={u.id}
+                        />
+                      </Td>
                       <Td isNumeric>{score}</Td>
                     </Tr>
                   )
