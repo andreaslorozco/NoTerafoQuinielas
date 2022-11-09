@@ -8,8 +8,14 @@ interface Props {
 }
 
 const UserLink = ({ username, tournamentId, userId }: Props) => {
+  const href = {
+    pathname: `/tournament/${tournamentId}/user/${userId}`,
+    query: {
+      username,
+    },
+  }
   return (
-    <NextLink href={`/tournament/${tournamentId}/user/${userId}`} passHref>
+    <NextLink href={href} passHref>
       <Link>{username}</Link>
     </NextLink>
   )
