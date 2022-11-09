@@ -157,7 +157,6 @@ const LobbyPage = ({ session }: Props) => {
                   }, 0)
                   return (
                     <Tr key={u.id}>
-                      {/* <Td>{u.name.split(" ")[0]}</Td> */}
                       <Td>
                         <UserLink
                           username={u.name.split(" ")[0]}
