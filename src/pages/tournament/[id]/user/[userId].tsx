@@ -2,9 +2,9 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Heading,
   Flex,
   FormControl,
-  FormLabel,
   Select,
   Spinner,
 } from "@chakra-ui/react"
@@ -21,7 +21,7 @@ interface GameWithTeams extends Game {
   away_team: Team
 }
 
-const UserPage = () => {
+const UserPage = ({ username }: { username: string }) => {
   const router = useRouter()
   const { userId } = router.query
   const [phases, setPhases] = useState<Phase[]>([])
@@ -61,8 +61,10 @@ const UserPage = () => {
 
   return (
     <div>
-      <FormControl>
-        <FormLabel>Stage</FormLabel>
+      <Heading as="h2" size="xl">
+        {username}&apos;s predictiions
+      </Heading>
+      <FormControl mt={4}>
         <Select
           placeholder="Select a Stage"
           onChange={handleSelectPhase}
@@ -75,12 +77,12 @@ const UserPage = () => {
           ))}
         </Select>
         {fetchingGames && (
-          <Flex justifyContent={"center"}>
+          <Flex justifyContent={"center"} mt={4}>
             <Spinner />
           </Flex>
         )}
         {!selectedPhaseId && (
-          <Alert status="error">
+          <Alert status="error" mt={4}>
             <AlertIcon />
             <AlertDescription>
               Select a phase from the list above.
@@ -113,6 +115,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
   return {
-    props: {},
+    props: {
+      username: context.query.username,
+    },
   }
 }
