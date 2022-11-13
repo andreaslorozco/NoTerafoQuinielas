@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, Select } from "@chakra-ui/react"
+import { Button, FormControl, FormLabel, Select } from "@chakra-ui/react"
 import { Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { unstable_getServerSession } from "next-auth"
@@ -43,7 +43,7 @@ const NewGame = () => {
       }),
     })
     const { game } = await response.json()
-    if (true) {
+    if (game) {
       setHomeTeamId("")
       setAwayTeamId("")
       setSaving(false)
