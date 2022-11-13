@@ -94,7 +94,7 @@ const PredictionForm = ({ game, userId }: Props) => {
         isLoading={submitting}
         type="submit"
         onClick={handleSubmit}
-        disabled
+        disabled={game.completed}
       >
         Save
       </Button>
