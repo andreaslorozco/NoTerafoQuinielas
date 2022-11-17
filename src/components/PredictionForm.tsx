@@ -58,6 +58,7 @@ const PredictionForm = ({ game, userId }: Props) => {
     })
     await response.json()
     setSubmitting(false)
+    setPredictionExists(true)
     toast({
       title: "Prediction saved",
       status: "success",
