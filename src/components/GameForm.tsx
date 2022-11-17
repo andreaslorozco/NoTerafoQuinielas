@@ -59,6 +59,8 @@ const GameForm = ({ game }: Props) => {
         mr={"1em"}
         value={homeScore.toString()}
         onChange={(e) => setHomeScore(e.target.valueAsNumber)}
+        px={1}
+        textAlign="center"
       />
       <FormLabel display="flex" width="22%" mb={0} alignItems="center">
         {game.away_team.name}
@@ -70,6 +72,8 @@ const GameForm = ({ game }: Props) => {
         mr={"1em"}
         value={awayScore.toString()}
         onChange={(e) => setAwayScore(e.target.valueAsNumber)}
+        px={1}
+        textAlign="center"
       />
       <Tooltip label="Completed?">
         <Checkbox
