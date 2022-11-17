@@ -20,8 +20,8 @@ interface GameWithTeams extends Game {
 
 const PredictionForm = ({ game, userId }: Props) => {
   const [submitting, setSubmitting] = useState(false)
-  const [homeScore, setHomeScore] = useState(0)
-  const [awayScore, setAwayScore] = useState(0)
+  const [homeScore, setHomeScore] = useState<number | "">(0)
+  const [awayScore, setAwayScore] = useState<number | "">(0)
   const [predictionFetched, setPredictionFetched] = useState(false)
   const toast = useToast()
 
@@ -63,40 +63,54 @@ const PredictionForm = ({ game, userId }: Props) => {
     })
   }
 
+  const handleScoreChange = (isHomeScore: boolean, score: number) => {
+    if (isHomeScore) {
+      if (homeScore == 0) setHomeScore("")
+      setHomeScore(score)
+    } else {
+      if (awayScore == 0) setAwayScore("")
+      setAwayScore(score)
+    }
+  }
+
   return (
     <FormControl display="flex" as="form" mt="1em">
-      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
+      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
         {game.home_team.name}
       </FormLabel>
       <Input
         type="number"
         display="inline"
-        width="12%"
+        width="15%"
         mr={"1em"}
         value={homeScore.toString()}
-        onChange={(e) => setHomeScore(e.target.valueAsNumber)}
+        onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
         disabled={!predictionFetched}
+        px={1}
+        textAlign="center"
       />
-      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
+      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
         {game.away_team.name}
       </FormLabel>
       <Input
         type="number"
         display="inline"
-        width="12%"
+        width="15%"
         mr={"1em"}
         value={awayScore.toString()}
-        onChange={(e) => setAwayScore(e.target.valueAsNumber)}
+        onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
         disabled={!predictionFetched}
+        px={1}
+        textAlign="center"
       />
       <Button
-        colorScheme="teal"
+        colorScheme={game ? "messenger" : "red"}
         isLoading={submitting}
         type="submit"
         onClick={handleSubmit}
         disabled={game.completed}
       >
-        Save
+        {game ? "Save" : "Save!"}
       </Button>
     </FormControl>
   )
