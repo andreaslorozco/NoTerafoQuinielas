@@ -23,6 +23,7 @@ const PredictionForm = ({ game, userId }: Props) => {
   const [homeScore, setHomeScore] = useState<number | "">(0)
   const [awayScore, setAwayScore] = useState<number | "">(0)
   const [predictionFetched, setPredictionFetched] = useState(false)
+  const [predictionExists, setPredictionExists] = useState(true)
   const toast = useToast()
 
   useEffect(() => {
@@ -35,6 +36,8 @@ const PredictionForm = ({ game, userId }: Props) => {
       if (prediction) {
         setHomeScore(prediction.home_score)
         setAwayScore(prediction.away_score)
+      } else {
+        setPredictionExists(false)
       }
       setPredictionFetched(true)
     }
@@ -104,13 +107,13 @@ const PredictionForm = ({ game, userId }: Props) => {
         textAlign="center"
       />
       <Button
-        colorScheme={game ? "messenger" : "red"}
+        colorScheme={predictionExists ? "messenger" : "red"}
         isLoading={submitting}
         type="submit"
         onClick={handleSubmit}
         disabled={game.completed}
       >
-        {game ? "Save" : "Save!"}
+        {predictionExists ? "Save" : "Save!"}
       </Button>
     </FormControl>
   )
