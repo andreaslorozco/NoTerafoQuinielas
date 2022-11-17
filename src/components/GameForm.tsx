@@ -49,27 +49,31 @@ const GameForm = ({ game }: Props) => {
 
   return (
     <FormControl display="flex" as="form" mt="1em">
-      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
+      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
         {game.home_team.name}
       </FormLabel>
       <Input
         type="number"
         display="inline"
-        width="12%"
+        width="15%"
         mr={"1em"}
         value={homeScore.toString()}
         onChange={(e) => setHomeScore(e.target.valueAsNumber)}
+        px={1}
+        textAlign="center"
       />
-      <FormLabel display="flex" width="25%" mb={0} alignItems="center">
+      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
         {game.away_team.name}
       </FormLabel>
       <Input
         type="number"
         display="inline"
-        width="12%"
+        width="15%"
         mr={"1em"}
         value={awayScore.toString()}
         onChange={(e) => setAwayScore(e.target.valueAsNumber)}
+        px={1}
+        textAlign="center"
       />
       <Tooltip label="Completed?">
         <Checkbox
@@ -79,7 +83,7 @@ const GameForm = ({ game }: Props) => {
         />
       </Tooltip>
       <Button
-        colorScheme="teal"
+        colorScheme="messenger"
         isLoading={submitting}
         type="submit"
         onClick={handleSubmit}
