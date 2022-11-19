@@ -10,8 +10,6 @@ import {
   Table,
   TableCaption,
   TableContainer,
-  Tbody,
-  Td,
   Tfoot,
   Th,
   Thead,
@@ -24,7 +22,7 @@ import { GetServerSidePropsContext } from "next/types"
 import { useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import NextLink from "next/link"
-import UserLink from "../../components/UserLink"
+import SortedUsersTable from "../../components/SortedUsersTable"
 
 interface Props {
   session: Session
@@ -148,27 +146,13 @@ const LobbyPage = ({ session }: Props) => {
                 <Th isNumeric>Points</Th>
               </Tr>
             </Thead>
-            <Tbody>
-              {usersFetched &&
-                users.map((u) => {
-                  const score = predictions.reduce((acc, p) => {
-                    if (p.user_id !== u.id) return acc
-                    return acc + p.score
-                  }, 0)
-                  return (
-                    <Tr key={u.id}>
-                      <Td>
-                        <UserLink
-                          username={u.name.split(" ")[0]}
-                          tournamentId={lobby.tournament_id}
-                          userId={u.id}
-                        />
-                      </Td>
-                      <Td isNumeric>{score}</Td>
-                    </Tr>
-                  )
-                })}
-            </Tbody>
+            {usersFetched && (
+              <SortedUsersTable
+                users={users}
+                predictions={predictions}
+                lobby={lobby}
+              />
+            )}
             <Tfoot>
               <Tr>
                 <Th>Player</Th>
