@@ -1,14 +1,24 @@
 import { Box, Button, Flex, Heading, Spinner } from "@chakra-ui/react"
 import type { NextPage } from "next"
+import { Session } from "next-auth/core/types"
 import { useSession, signIn } from "next-auth/react"
-
 import Head from "next/head"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import HomeMenuButtons from "../components/HomeMenuButtons"
 
 const Home: NextPage = () => {
   const { data: session } = useSession()
+  const prevSessionRef = useRef<Session>()
   const [loading, setLoading] = useState(false)
+  const [showInitialSpinner, setShowInitialSpinner] = useState(true)
+
+  useEffect(() => {
+    prevSessionRef.current = session
+    if (prevSessionRef.current === undefined && (session === null || session)) {
+      setShowInitialSpinner(false)
+    }
+  }, [session])
+
   return (
     <>
       <Box as="main">
@@ -33,7 +43,7 @@ const Home: NextPage = () => {
             {!loading && <HomeMenuButtons setLoading={setLoading} />}
           </>
         )}
-        {!session && (
+        {!session && !showInitialSpinner && (
           <>
             <Heading size="lg">Welcome, stranger!</Heading>
             <Button
@@ -45,6 +55,16 @@ const Home: NextPage = () => {
               Sign in to get started
             </Button>
           </>
+        )}
+        {!session && showInitialSpinner && (
+          <Flex
+            height="208px"
+            alignItems={"center"}
+            justifyContent={"center"}
+            mt={"2em"}
+          >
+            <Spinner size="xl" />
+          </Flex>
         )}
       </Box>
     </>
