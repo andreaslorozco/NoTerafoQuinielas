@@ -66,9 +66,10 @@ const GameAdminPage = () => {
     HTMLButtonElement
   > = async () => {
     setProcessingGames(true)
+    const completedGames = games.filter((g) => g.completed)
     const response = await fetch("/api/process-scores", {
       method: "POST",
-      body: JSON.stringify({ games }),
+      body: JSON.stringify({ games: completedGames }),
     })
     await response.json()
     setProcessingGames(false)

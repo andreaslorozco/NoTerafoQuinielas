@@ -44,23 +44,27 @@ export default async function handler(
       },
     })
 
-    const processedPredictions = unprocessedPredictions.map((prediction) => {
-      const game = games.find((g) => g.id === prediction.game_id)
-      if (!game.completed) return prediction
+    const processedPredictions = unprocessedPredictions.reduce(
+      (result, prediction) => {
+        const game = games.find((g) => g.id === prediction.game_id)
+        if (!game.completed) return result
 
-      let finalScore = 0
-      if (isPerfectScore(game, prediction)) {
-        finalScore = 3
-      } else if (isWinnerMatch(game, prediction)) {
-        finalScore = 1
-      }
+        let finalScore = 0
+        if (isPerfectScore(game, prediction)) {
+          finalScore = 3
+        } else if (isWinnerMatch(game, prediction)) {
+          finalScore = 1
+        }
 
-      return {
-        ...prediction,
-        score: finalScore,
-        processed: true,
-      }
-    })
+        result.push({
+          ...prediction,
+          score: finalScore,
+          processed: true,
+        })
+        return result
+      },
+      []
+    )
 
     processedPredictions.forEach(async (prediction) => {
       await prisma.prediction.update({
