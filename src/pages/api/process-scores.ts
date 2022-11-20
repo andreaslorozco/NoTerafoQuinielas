@@ -62,18 +62,20 @@ export default async function handler(
       }
     })
 
-    for (const processedPrediction of processedPredictions) {
+    processedPredictions.forEach(async (prediction) => {
       await prisma.prediction.update({
         where: {
-          id: processedPrediction.id,
+          id: prediction.id,
         },
         data: {
-          score: processedPrediction.score,
-          processed: processedPrediction.processed,
+          score: prediction.score,
+          processed: prediction.processed,
         },
       })
-    }
+    })
 
-    res.status(200).json({ message: "Predictions have been processed!" })
+    res.status(200).json({
+      message: `Processing ${processedPredictions.length} predictions`,
+    })
   }
 }
