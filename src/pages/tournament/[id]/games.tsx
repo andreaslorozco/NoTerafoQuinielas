@@ -15,6 +15,7 @@ import {
   ChangeEventHandler,
   MouseEventHandler,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import GameForm from "../../../components/GameForm"
@@ -83,6 +84,14 @@ const GameAdminPage = () => {
     setProcessingGames(false)
   }
 
+  const sortedGames = useMemo(() => {
+    return games.sort((firstGame, secondGame) => {
+      const firstDate = new Date(firstGame.date)
+      const secondDate = new Date(secondGame.date)
+      return firstDate.getTime() - secondDate.getTime()
+    })
+  }, [games])
+
   return (
     <div>
       <FormControl>
@@ -119,7 +128,7 @@ const GameAdminPage = () => {
             Process Scores
           </Button>
         )}
-        {games.map((g) => (
+        {sortedGames.map((g) => (
           <GameForm key={g.id} game={g} />
         ))}
       </FormControl>
