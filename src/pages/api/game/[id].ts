@@ -9,6 +9,7 @@ interface ParsedBody {
   homeScore: number
   awayScore: number
   gameCompleted: boolean
+  date: Date
 }
 
 export default async function handler(
@@ -26,10 +27,9 @@ export default async function handler(
     })
     res.status(200).json({ game })
   }
-  if (req.method === "POST") {
-    const { homeScore, awayScore, gameCompleted }: ParsedBody = JSON.parse(
-      req.body
-    )
+  if (req.method === "PUT") {
+    const { homeScore, awayScore, gameCompleted, date }: ParsedBody =
+      JSON.parse(req.body)
 
     const prisma = new PrismaClient()
 
@@ -38,6 +38,7 @@ export default async function handler(
         home_score: homeScore,
         away_score: awayScore,
         completed: gameCompleted,
+        date,
       },
       where: {
         id,
