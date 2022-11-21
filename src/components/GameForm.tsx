@@ -105,7 +105,6 @@ const GameForm = ({ game }: Props) => {
           onChange={(e) => setDate(e.target.value)}
         />
       </FormControl>
-      {/* <Divider my={4} /> */}
     </>
   )
 }
