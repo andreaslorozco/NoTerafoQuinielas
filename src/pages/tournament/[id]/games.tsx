@@ -5,6 +5,7 @@ import {
   FormLabel,
   Select,
   Spinner,
+  useToast,
 } from "@chakra-ui/react"
 import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
@@ -31,6 +32,7 @@ const GameAdminPage = () => {
   const [games, setGames] = useState<GameWithTeams[]>([])
   const [fetchingGames, setFetchingGames] = useState(false)
   const [processingGames, setProcessingGames] = useState(false)
+  const toast = useToast()
 
   useEffect(() => {
     const { id } = router.query
@@ -71,7 +73,13 @@ const GameAdminPage = () => {
       method: "POST",
       body: JSON.stringify({ games: completedGames }),
     })
-    await response.json()
+    const { message } = await response.json()
+    toast({
+      title: message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
     setProcessingGames(false)
   }
 
