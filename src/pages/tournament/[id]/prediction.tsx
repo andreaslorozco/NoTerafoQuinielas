@@ -10,7 +10,7 @@ import { Game, Phase, Team } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
-import { ChangeEventHandler, useEffect, useState } from "react"
+import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
 import PredictionForm from "../../../components/PredictionForm"
 import { authOptions } from "../../api/auth/[...nextauth]"
 
@@ -55,6 +55,14 @@ const Prediction = ({ session }: Props) => {
     if (selectedPhaseId) getGames()
   }, [selectedPhaseId])
 
+  const sortedGames = useMemo(() => {
+    return games.sort((firstGame, secondGame) => {
+      const firstDate = new Date(firstGame.date)
+      const secondDate = new Date(secondGame.date)
+      return firstDate.getTime() - secondDate.getTime()
+    })
+  }, [games])
+
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
     setSelectedPhaseId(+e.target.value)
@@ -86,7 +94,7 @@ const Prediction = ({ session }: Props) => {
             Select a Stage from the list above
           </Button>
         )}
-        {games.map((g) => (
+        {sortedGames.map((g) => (
           <PredictionForm key={g.id} game={g} userId={session.user.id} />
         ))}
       </FormControl>
