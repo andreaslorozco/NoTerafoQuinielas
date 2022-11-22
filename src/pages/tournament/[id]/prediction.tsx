@@ -1,10 +1,5 @@
 import {
   Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
   Button,
   Flex,
   FormControl,
@@ -17,6 +12,7 @@ import { GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
+import CustomAccordion from "../../../components/CustomAccordion"
 import PredictionForm from "../../../components/PredictionForm"
 import { groupGamesByDate } from "../../../lib/groupGamesByDate"
 import { GameWithTeams } from "../../../types"
@@ -93,23 +89,15 @@ const Prediction = ({ session }: Props) => {
         )}
         <Accordion allowToggle>
           {groupedGames.map((group, index) => (
-            <AccordionItem key={index}>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  {new Date(group[0].date).toDateString()}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                {group.map((game) => (
-                  <PredictionForm
-                    key={game.id}
-                    game={game}
-                    userId={session.user.id}
-                  />
-                ))}
-              </AccordionPanel>
-            </AccordionItem>
+            <CustomAccordion key={index} group={group}>
+              {group.map((game) => (
+                <PredictionForm
+                  key={game.id}
+                  game={game}
+                  userId={session.user.id}
+                />
+              ))}
+            </CustomAccordion>
           ))}
         </Accordion>
       </FormControl>
