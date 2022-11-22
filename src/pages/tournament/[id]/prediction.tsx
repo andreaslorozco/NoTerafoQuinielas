@@ -58,17 +58,7 @@ const Prediction = ({ session }: Props) => {
     if (selectedPhaseId) getGames()
   }, [selectedPhaseId])
 
-  const sortedGames = useMemo(() => {
-    return games.sort((firstGame, secondGame) => {
-      const firstDate = new Date(firstGame.date)
-      const secondDate = new Date(secondGame.date)
-      return firstDate.getTime() - secondDate.getTime()
-    })
-  }, [games])
-  const groupedGames = useMemo(
-    () => groupGamesByDate(sortedGames),
-    [sortedGames]
-  )
+  const groupedGames = useMemo(() => groupGamesByDate(games), [games])
 
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
