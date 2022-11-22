@@ -1,4 +1,10 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Button,
   Flex,
   FormControl,
@@ -12,6 +18,7 @@ import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
 import PredictionForm from "../../../components/PredictionForm"
+import { groupGamesByDate } from "../../../lib/groupGamesByDate"
 import { authOptions } from "../../api/auth/[...nextauth]"
 
 interface GameWithTeams extends Game {
@@ -62,6 +69,10 @@ const Prediction = ({ session }: Props) => {
       return firstDate.getTime() - secondDate.getTime()
     })
   }, [games])
+  const groupedGames = useMemo(
+    () => groupGamesByDate(sortedGames),
+    [sortedGames]
+  )
 
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
@@ -94,9 +105,27 @@ const Prediction = ({ session }: Props) => {
             Select a Stage from the list above
           </Button>
         )}
-        {sortedGames.map((g) => (
-          <PredictionForm key={g.id} game={g} userId={session.user.id} />
-        ))}
+        <Accordion allowToggle>
+          {groupedGames.map((group, index) => (
+            <AccordionItem key={index}>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  {new Date(group[0].date).toDateString()}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                {group.map((game) => (
+                  <PredictionForm
+                    key={game.id}
+                    game={game}
+                    userId={session.user.id}
+                  />
+                ))}
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </FormControl>
     </div>
   )
