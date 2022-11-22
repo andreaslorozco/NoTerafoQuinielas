@@ -1,15 +1,10 @@
 import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react"
-import { Game, Team } from "@prisma/client"
 import { useEffect, useState } from "react"
+import { GameWithTeams } from "../types"
 
 interface Props {
   game: GameWithTeams
   userId: number
-}
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
 }
 
 const DisplayPrediction = ({ game, userId }: Props) => {

@@ -12,19 +12,15 @@ import {
   Select,
   Spinner,
 } from "@chakra-ui/react"
-import { Game, Phase, Team } from "@prisma/client"
+import { Phase } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
 import PredictionForm from "../../../components/PredictionForm"
 import { groupGamesByDate } from "../../../lib/groupGamesByDate"
+import { GameWithTeams } from "../../../types"
 import { authOptions } from "../../api/auth/[...nextauth]"
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
-}
 
 interface Props {
   session: Session

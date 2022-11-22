@@ -1,9 +1,4 @@
-import { Game, Team } from "@prisma/client"
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
-}
+import { GameWithTeams } from "../types"
 
 export const groupGamesByDate = (games: GameWithTeams[]) => {
   return games.reduce((groupedGames: GameWithTeams[][], game, index, games) => {

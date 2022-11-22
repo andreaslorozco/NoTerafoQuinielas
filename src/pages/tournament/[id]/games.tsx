@@ -7,7 +7,7 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react"
-import { Game, Phase, Team } from "@prisma/client"
+import { Phase } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
@@ -19,12 +19,8 @@ import {
   useState,
 } from "react"
 import GameForm from "../../../components/GameForm"
+import { GameWithTeams } from "../../../types"
 import { authOptions } from "../../api/auth/[...nextauth]"
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
-}
 
 const GameAdminPage = () => {
   const router = useRouter()

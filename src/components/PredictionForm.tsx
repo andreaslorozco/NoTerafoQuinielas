@@ -5,17 +5,12 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react"
-import { Game, Team } from "@prisma/client"
 import { MouseEventHandler, useEffect, useState } from "react"
+import { GameWithTeams } from "../types"
 
 interface Props {
   game: GameWithTeams
   userId: number
-}
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
 }
 
 const PredictionForm = ({ game, userId }: Props) => {
