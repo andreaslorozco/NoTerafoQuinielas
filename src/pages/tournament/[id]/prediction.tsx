@@ -1,5 +1,8 @@
 import {
   Accordion,
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Flex,
   FormControl,
@@ -14,6 +17,7 @@ import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
 import CustomAccordion from "../../../components/CustomAccordion"
 import PredictionForm from "../../../components/PredictionForm"
+// import { getDefaultIndexes } from "../../../lib/getDefaultIndexes"
 import { groupGamesByDate } from "../../../lib/groupGamesByDate"
 import { GameWithTeams } from "../../../types"
 import { authOptions } from "../../api/auth/[...nextauth]"
@@ -55,6 +59,10 @@ const Prediction = ({ session }: Props) => {
   }, [selectedPhaseId])
 
   const groupedGames = useMemo(() => groupGamesByDate(games), [games])
+  // const defaultIndexes = useMemo(
+  //   () => getDefaultIndexes(groupedGames),
+  //   [groupedGames]
+  // )
 
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
@@ -76,7 +84,14 @@ const Prediction = ({ session }: Props) => {
             </option>
           ))}
         </Select>
-        <FormLabel mt={4}>Enter your predictions</FormLabel>
+        <FormLabel mt={4}>
+          {!!selectedPhaseId && (
+            <Alert status="info" my={4}>
+              <AlertIcon />
+              <AlertDescription>Enter your predictions below</AlertDescription>
+            </Alert>
+          )}
+        </FormLabel>
         {fetchingGames && (
           <Flex justifyContent={"center"}>
             <Spinner />
@@ -87,19 +102,21 @@ const Prediction = ({ session }: Props) => {
             Select a Stage from the list above
           </Button>
         )}
-        <Accordion allowToggle>
-          {groupedGames.map((group, index) => (
-            <CustomAccordion key={index} group={group}>
-              {group.map((game) => (
-                <PredictionForm
-                  key={game.id}
-                  game={game}
-                  userId={session.user.id}
-                />
-              ))}
-            </CustomAccordion>
-          ))}
-        </Accordion>
+        {groupedGames.length > 0 && (
+          <Accordion allowMultiple>
+            {groupedGames.map((group, index) => (
+              <CustomAccordion key={index} group={group}>
+                {group.map((game) => (
+                  <PredictionForm
+                    key={game.id}
+                    game={game}
+                    userId={session.user.id}
+                  />
+                ))}
+              </CustomAccordion>
+            ))}
+          </Accordion>
+        )}
       </FormControl>
     </div>
   )
