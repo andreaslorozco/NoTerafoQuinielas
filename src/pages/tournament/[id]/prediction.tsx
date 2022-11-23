@@ -1,4 +1,8 @@
 import {
+  Accordion,
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Flex,
   FormControl,
@@ -6,18 +10,17 @@ import {
   Select,
   Spinner,
 } from "@chakra-ui/react"
-import { Game, Phase, Team } from "@prisma/client"
+import { Phase } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
+import CustomAccordion from "../../../components/CustomAccordion"
 import PredictionForm from "../../../components/PredictionForm"
+// import { getDefaultIndexes } from "../../../lib/getDefaultIndexes"
+import { groupGamesByDate } from "../../../lib/groupGamesByDate"
+import { GameWithTeams } from "../../../types"
 import { authOptions } from "../../api/auth/[...nextauth]"
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
-}
 
 interface Props {
   session: Session
@@ -55,13 +58,11 @@ const Prediction = ({ session }: Props) => {
     if (selectedPhaseId) getGames()
   }, [selectedPhaseId])
 
-  const sortedGames = useMemo(() => {
-    return games.sort((firstGame, secondGame) => {
-      const firstDate = new Date(firstGame.date)
-      const secondDate = new Date(secondGame.date)
-      return firstDate.getTime() - secondDate.getTime()
-    })
-  }, [games])
+  const groupedGames = useMemo(() => groupGamesByDate(games), [games])
+  // const defaultIndexes = useMemo(
+  //   () => getDefaultIndexes(groupedGames),
+  //   [groupedGames]
+  // )
 
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
@@ -83,7 +84,14 @@ const Prediction = ({ session }: Props) => {
             </option>
           ))}
         </Select>
-        <FormLabel mt={4}>Enter your predictions</FormLabel>
+        <FormLabel mt={4}>
+          {!!selectedPhaseId && (
+            <Alert status="info" my={4}>
+              <AlertIcon />
+              <AlertDescription>Enter your predictions below</AlertDescription>
+            </Alert>
+          )}
+        </FormLabel>
         {fetchingGames && (
           <Flex justifyContent={"center"}>
             <Spinner />
@@ -94,9 +102,21 @@ const Prediction = ({ session }: Props) => {
             Select a Stage from the list above
           </Button>
         )}
-        {sortedGames.map((g) => (
-          <PredictionForm key={g.id} game={g} userId={session.user.id} />
-        ))}
+        {groupedGames.length > 0 && (
+          <Accordion allowMultiple>
+            {groupedGames.map((group, index) => (
+              <CustomAccordion key={index} group={group}>
+                {group.map((game) => (
+                  <PredictionForm
+                    key={game.id}
+                    game={game}
+                    userId={session.user.id}
+                  />
+                ))}
+              </CustomAccordion>
+            ))}
+          </Accordion>
+        )}
       </FormControl>
     </div>
   )

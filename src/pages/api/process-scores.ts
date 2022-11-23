@@ -1,13 +1,9 @@
-import { Game, Prediction, PrismaClient, Team } from "@prisma/client"
+import { Game, Prediction, PrismaClient } from "@prisma/client"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { GameWithTeams } from "../../types"
 
 type Data = {
   message: string
-}
-
-interface GameWithTeams extends Game {
-  home_team: Team
-  away_team: Team
 }
 
 const isPerfectScore = (game: Game, prediction: Prediction) => {
