@@ -23,6 +23,7 @@ import { useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import NextLink from "next/link"
 import SortedUsersTable from "../../components/SortedUsersTable"
+import UserStats from "../../components/UserStats"
 
 interface Props {
   session: Session
@@ -35,6 +36,8 @@ const LobbyPage = ({ session }: Props) => {
   const [users, setUsers] = useState<User[]>([])
   const [usersFetched, setUsersFetched] = useState(false)
   const [predictions, setPredictions] = useState<Prediction[]>([])
+  const [stats, setStats] = useState(null)
+  const userId = session.user.id
 
   useEffect(() => {
     const { id } = router.query
@@ -54,11 +57,25 @@ const LobbyPage = ({ session }: Props) => {
       setPredictions(predictions)
     }
     getUsers()
+
     setUsersFetched(true)
   }, [router.query])
 
   useEffect(() => {
-    const userId = session.user.id
+    const getUserStats = async () => {
+      const response = await fetch(
+        `/api/user/${userId}/stats?tournament=${lobby.tournament_id}`,
+        {
+          method: "GET",
+        }
+      )
+      const { stats } = await response.json()
+      setStats(stats)
+    }
+    if (lobby) getUserStats()
+  }, [lobby, userId])
+
+  useEffect(() => {
     const userLobbyId = router.query.id
     const getUserLobby = async () => {
       const response = await fetch(
@@ -71,7 +88,7 @@ const LobbyPage = ({ session }: Props) => {
       setUserLobby(userLobby)
     }
     getUserLobby()
-  }, [session.user.id, router.query.id])
+  }, [router.query.id, userId])
 
   const handleShareClick = () => {
     if (navigator.share) {
@@ -136,6 +153,13 @@ const LobbyPage = ({ session }: Props) => {
           </Button>
         </NextLink>
       </Box>
+      {stats && (
+        <UserStats
+          perfect={stats.perfect}
+          good={stats.good}
+          nothing={stats.nothing}
+        />
+      )}
       <Box mt={"2em"}>
         <TableContainer>
           <Table variant="simple">
