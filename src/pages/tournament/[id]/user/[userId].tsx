@@ -7,13 +7,16 @@ import {
   FormControl,
   Select,
   Spinner,
+  Accordion,
 } from "@chakra-ui/react"
 import { Phase } from "@prisma/client"
 import { GetServerSidePropsContext } from "next"
 import { unstable_getServerSession } from "next-auth"
 import { useRouter } from "next/router"
-import { ChangeEventHandler, useEffect, useState } from "react"
+import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
+import CustomAccordion from "../../../../components/CustomAccordion"
 import DisplayPrediction from "../../../../components/DisplayPrediction"
+import { groupGamesByDate } from "../../../../lib/groupGamesByDate"
 import { GameWithTeams } from "../../../../types"
 import { authOptions } from "../../../api/auth/[...nextauth]"
 
@@ -55,6 +58,12 @@ const UserPage = ({ username }: { username: string }) => {
     setSelectedPhaseId(+e.target.value)
   }
 
+  const groupedGames = useMemo(() => groupGamesByDate(games), [games])
+  const defaultIndexes = useMemo(
+    () => Array.from(Array(groupedGames.length).keys()),
+    [groupedGames]
+  )
+
   return (
     <div>
       <Heading as="h2" size="xl">
@@ -85,9 +94,21 @@ const UserPage = ({ username }: { username: string }) => {
             </AlertDescription>
           </Alert>
         )}
-        {games.map((g) => (
-          <DisplayPrediction key={g.id} game={g} userId={+userId} />
-        ))}
+        {!!groupedGames.length && (
+          <Accordion allowMultiple defaultIndex={defaultIndexes} mt={8}>
+            {groupedGames.map((group, index) => (
+              <CustomAccordion key={index} group={group}>
+                {group.map((game) => (
+                  <DisplayPrediction
+                    key={game.id}
+                    game={game}
+                    userId={+userId}
+                  />
+                ))}
+              </CustomAccordion>
+            ))}
+          </Accordion>
+        )}
       </FormControl>
     </div>
   )
