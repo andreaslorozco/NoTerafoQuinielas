@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   FormControl,
@@ -8,8 +7,8 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { MouseEventHandler, useEffect, useState } from "react"
-import { BADGE_COLOR_SCHEME } from "../lib/constants"
 import { GameWithTeams } from "../types"
+import PredictionScore from "./PredictionScore"
 
 interface Props {
   game: GameWithTeams
@@ -120,11 +119,7 @@ const PredictionForm = ({ game, userId }: Props) => {
           {predictionExists ? "Save" : "Save!"}
         </Button>
       </FormControl>
-      {processed && (
-        <Badge
-          colorScheme={BADGE_COLOR_SCHEME[score]}
-        >{`+${score} points`}</Badge>
-      )}
+      <PredictionScore processed={processed} score={score} />
     </Box>
   )
 }

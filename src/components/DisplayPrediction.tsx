@@ -1,14 +1,7 @@
-import {
-  Badge,
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react"
+import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
-import { BADGE_COLOR_SCHEME } from "../lib/constants"
 import { GameWithTeams } from "../types"
+import PredictionScore from "./PredictionScore"
 
 interface Props {
   game: GameWithTeams
@@ -68,11 +61,7 @@ const DisplayPrediction = ({ game, userId }: Props) => {
           Save
         </Button>
       </FormControl>
-      {processed && (
-        <Badge
-          colorScheme={BADGE_COLOR_SCHEME[score]}
-        >{`+${score} points`}</Badge>
-      )}
+      <PredictionScore processed={processed} score={score} />
     </Box>
   )
 }
