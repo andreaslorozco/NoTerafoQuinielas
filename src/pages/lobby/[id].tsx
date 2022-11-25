@@ -23,6 +23,7 @@ import { useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import NextLink from "next/link"
 import SortedUsersTable from "../../components/SortedUsersTable"
+import UserStats from "../../components/UserStats"
 
 interface Props {
   session: Session
@@ -35,6 +36,7 @@ const LobbyPage = ({ session }: Props) => {
   const [users, setUsers] = useState<User[]>([])
   const [usersFetched, setUsersFetched] = useState(false)
   const [predictions, setPredictions] = useState<Prediction[]>([])
+  const [stats, setStats] = useState(null)
   const userId = session.user.id
 
   useEffect(() => {
@@ -67,8 +69,8 @@ const LobbyPage = ({ session }: Props) => {
           method: "GET",
         }
       )
-      const data = await response.json()
-      console.log("DATA", data)
+      const { stats } = await response.json()
+      setStats(stats)
     }
     if (lobby) getUserStats()
   }, [lobby, userId])
@@ -151,6 +153,13 @@ const LobbyPage = ({ session }: Props) => {
           </Button>
         </NextLink>
       </Box>
+      {stats && (
+        <UserStats
+          perfect={stats.perfect}
+          good={stats.good}
+          nothing={stats.nothing}
+        />
+      )}
       <Box mt={"2em"}>
         <TableContainer>
           <Table variant="simple">
