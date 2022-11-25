@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -7,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { MouseEventHandler, useEffect, useState } from "react"
 import { GameWithTeams } from "../types"
+import PredictionScore from "./PredictionScore"
 
 interface Props {
   game: GameWithTeams
@@ -17,6 +19,8 @@ const PredictionForm = ({ game, userId }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [homeScore, setHomeScore] = useState<number | "">(0)
   const [awayScore, setAwayScore] = useState<number | "">(0)
+  const [processed, setProcessed] = useState(false)
+  const [score, setScore] = useState(0)
   const [predictionFetched, setPredictionFetched] = useState(false)
   const [predictionExists, setPredictionExists] = useState(true)
   const toast = useToast()
@@ -31,6 +35,8 @@ const PredictionForm = ({ game, userId }: Props) => {
       if (prediction) {
         setHomeScore(prediction.home_score)
         setAwayScore(prediction.away_score)
+        setProcessed(prediction.processed)
+        setScore(prediction.score)
       } else {
         setPredictionExists(false)
       }
@@ -73,45 +79,48 @@ const PredictionForm = ({ game, userId }: Props) => {
   }
 
   return (
-    <FormControl display="flex" as="form" mt="1em">
-      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
-        {game.home_team.name}
-      </FormLabel>
-      <Input
-        type="number"
-        display="inline"
-        width="15%"
-        mr={"1em"}
-        value={homeScore.toString()}
-        onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
-        disabled={!predictionFetched}
-        px={1}
-        textAlign="center"
-      />
-      <FormLabel display="flex" width="22%" mb={0} alignItems="center">
-        {game.away_team.name}
-      </FormLabel>
-      <Input
-        type="number"
-        display="inline"
-        width="15%"
-        mr={"1em"}
-        value={awayScore.toString()}
-        onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
-        disabled={!predictionFetched}
-        px={1}
-        textAlign="center"
-      />
-      <Button
-        colorScheme={predictionExists ? "messenger" : "red"}
-        isLoading={submitting}
-        type="submit"
-        onClick={handleSubmit}
-        disabled={game.completed}
-      >
-        {predictionExists ? "Save" : "Save!"}
-      </Button>
-    </FormControl>
+    <Box>
+      <FormControl display="flex" as="form" mt="1em">
+        <FormLabel display="flex" width="22%" mb={0} alignItems="center">
+          {game.home_team.name}
+        </FormLabel>
+        <Input
+          type="number"
+          display="inline"
+          width="15%"
+          mr={"1em"}
+          value={homeScore.toString()}
+          onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
+          disabled={!predictionFetched}
+          px={1}
+          textAlign="center"
+        />
+        <FormLabel display="flex" width="22%" mb={0} alignItems="center">
+          {game.away_team.name}
+        </FormLabel>
+        <Input
+          type="number"
+          display="inline"
+          width="15%"
+          mr={"1em"}
+          value={awayScore.toString()}
+          onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
+          disabled={!predictionFetched}
+          px={1}
+          textAlign="center"
+        />
+        <Button
+          colorScheme={predictionExists ? "messenger" : "red"}
+          isLoading={submitting}
+          type="submit"
+          onClick={handleSubmit}
+          disabled={game.completed}
+        >
+          {predictionExists ? "Save" : "Save!"}
+        </Button>
+      </FormControl>
+      <PredictionScore processed={processed} score={score} />
+    </Box>
   )
 }
 
