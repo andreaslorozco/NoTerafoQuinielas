@@ -1,4 +1,11 @@
-import { Stat, StatLabel, StatNumber, Flex, Badge } from "@chakra-ui/react"
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  Flex,
+  Badge,
+  Show,
+} from "@chakra-ui/react"
 import { BADGE_COLOR_SCHEME } from "../lib/constants"
 
 interface Props {
@@ -20,11 +27,13 @@ const UserStats = ({ perfect, good, nothing }: Props) => {
         <StatNumber>{good}</StatNumber>
         <Badge colorScheme={BADGE_COLOR_SCHEME[1]}>+1 points</Badge>
       </Stat>
-      <Stat display="flex" width="auto" justifyContent="center">
-        <StatLabel>No Guess (#) </StatLabel>
-        <StatNumber>{nothing}</StatNumber>
-        <Badge colorScheme={BADGE_COLOR_SCHEME[0]}>+0 points</Badge>
-      </Stat>
+      <Show above="sm">
+        <Stat display="flex" width="auto" justifyContent="center">
+          <StatLabel>No Guess (#) </StatLabel>
+          <StatNumber>{nothing}</StatNumber>
+          <Badge colorScheme={BADGE_COLOR_SCHEME[0]}>+0 points</Badge>
+        </Stat>
+      </Show>
     </Flex>
   )
 }
