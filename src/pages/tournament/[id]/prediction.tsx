@@ -17,7 +17,7 @@ import { useRouter } from "next/router"
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
 import CustomAccordion from "../../../components/CustomAccordion"
 import PredictionForm from "../../../components/PredictionForm"
-// import { getDefaultIndexes } from "../../../lib/getDefaultIndexes"
+import { getDefaultIndexes } from "../../../lib/getDefaultIndexes"
 import { groupGamesByDate } from "../../../lib/groupGamesByDate"
 import { GameWithTeams } from "../../../types"
 import { authOptions } from "../../api/auth/[...nextauth]"
@@ -59,10 +59,10 @@ const Prediction = ({ session }: Props) => {
   }, [selectedPhaseId])
 
   const groupedGames = useMemo(() => groupGamesByDate(games), [games])
-  // const defaultIndexes = useMemo(
-  //   () => getDefaultIndexes(groupedGames),
-  //   [groupedGames]
-  // )
+  const defaultIndexes = useMemo(
+    () => getDefaultIndexes(groupedGames),
+    [groupedGames]
+  )
 
   const handleSelectPhase: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setGames([])
@@ -103,7 +103,7 @@ const Prediction = ({ session }: Props) => {
           </Button>
         )}
         {groupedGames.length > 0 && (
-          <Accordion allowMultiple>
+          <Accordion allowMultiple defaultIndex={defaultIndexes}>
             {groupedGames.map((group, index) => (
               <CustomAccordion key={index} group={group}>
                 {group.map((game) => (
