@@ -35,6 +35,7 @@ const LobbyPage = ({ session }: Props) => {
   const [users, setUsers] = useState<User[]>([])
   const [usersFetched, setUsersFetched] = useState(false)
   const [predictions, setPredictions] = useState<Prediction[]>([])
+  const userId = session.user.id
 
   useEffect(() => {
     const { id } = router.query
@@ -54,11 +55,25 @@ const LobbyPage = ({ session }: Props) => {
       setPredictions(predictions)
     }
     getUsers()
+
     setUsersFetched(true)
   }, [router.query])
 
   useEffect(() => {
-    const userId = session.user.id
+    const getUserStats = async () => {
+      const response = await fetch(
+        `/api/user/${userId}/stats?tournament=${lobby.tournament_id}`,
+        {
+          method: "GET",
+        }
+      )
+      const data = await response.json()
+      console.log("DATA", data)
+    }
+    if (lobby) getUserStats()
+  }, [lobby, userId])
+
+  useEffect(() => {
     const userLobbyId = router.query.id
     const getUserLobby = async () => {
       const response = await fetch(
@@ -71,7 +86,7 @@ const LobbyPage = ({ session }: Props) => {
       setUserLobby(userLobby)
     }
     getUserLobby()
-  }, [session.user.id, router.query.id])
+  }, [router.query.id, userId])
 
   const handleShareClick = () => {
     if (navigator.share) {
