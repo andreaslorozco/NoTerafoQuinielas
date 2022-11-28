@@ -33,7 +33,6 @@ const DisplayPrediction = ({ game, userId }: Props) => {
     }
     getPrediction()
   }, [userId, game.id])
-  console.log("HOME", homeScore)
 
   return (
     <Box>
