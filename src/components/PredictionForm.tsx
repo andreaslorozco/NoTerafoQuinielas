@@ -25,6 +25,7 @@ const PredictionForm = ({ game, userId }: Props) => {
   const [score, setScore] = useState(0)
   const [predictionFetched, setPredictionFetched] = useState(false)
   const [predictionExists, setPredictionExists] = useState(true)
+  const [prediction, setPrediction] = useState(null)
   const toast = useToast()
 
   useEffect(() => {
@@ -35,10 +36,7 @@ const PredictionForm = ({ game, userId }: Props) => {
       )
       const { prediction } = await response.json()
       if (prediction) {
-        setHomeScore(prediction.home_score)
-        setAwayScore(prediction.away_score)
-        setProcessed(prediction.processed)
-        setScore(prediction.score)
+        setPrediction(prediction)
       } else {
         setPredictionExists(false)
       }
@@ -46,6 +44,15 @@ const PredictionForm = ({ game, userId }: Props) => {
     }
     getPrediction()
   }, [userId, game.id])
+
+  useEffect(() => {
+    if (prediction) {
+      setHomeScore(prediction.home_score)
+      setAwayScore(prediction.away_score)
+      setProcessed(prediction.processed)
+      setScore(prediction.score)
+    }
+  }, [prediction])
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
@@ -80,6 +87,8 @@ const PredictionForm = ({ game, userId }: Props) => {
     }
   }
 
+  const isDisabled = !predictionFetched || (prediction && prediction.processed)
+
   return (
     <Box>
       <FormControl display="flex" as="form" mt="1em" flexDirection="column">
@@ -94,7 +103,7 @@ const PredictionForm = ({ game, userId }: Props) => {
             my={"0.5rem"}
             value={homeScore.toString()}
             onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
-            disabled={!predictionFetched}
+            disabled={isDisabled}
             px={1}
             textAlign="center"
           />
@@ -110,7 +119,7 @@ const PredictionForm = ({ game, userId }: Props) => {
             my={"0.5rem"}
             value={awayScore.toString()}
             onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
-            disabled={!predictionFetched}
+            disabled={isDisabled}
             px={1}
             textAlign="center"
           />
