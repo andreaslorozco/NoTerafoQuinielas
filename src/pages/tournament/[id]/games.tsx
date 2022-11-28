@@ -88,6 +88,13 @@ const GameAdminPage = () => {
     })
   }, [games])
 
+  const updateGame = (updatedGame: GameWithTeams) => {
+    const gamesToUpdate = [...games]
+    const index = gamesToUpdate.findIndex((g) => g.id === updatedGame.id)
+    gamesToUpdate[index] = updatedGame
+    setGames(gamesToUpdate)
+  }
+
   return (
     <div>
       <FormControl>
@@ -125,7 +132,7 @@ const GameAdminPage = () => {
           </Button>
         )}
         {sortedGames.map((g) => (
-          <GameForm key={g.id} game={g} />
+          <GameForm key={g.id} game={g} updateGame={updateGame} />
         ))}
       </FormControl>
     </div>
