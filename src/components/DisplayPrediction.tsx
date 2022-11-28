@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { Box, Flex, FormControl, FormLabel, Input } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { GameWithTeams } from "../types"
 import PredictionScore from "./PredictionScore"
@@ -36,30 +36,35 @@ const DisplayPrediction = ({ game, userId }: Props) => {
 
   return (
     <Box>
-      <FormControl display="flex" as="form" mt="1em">
-        <FormLabel display="flex" width="25%" mb={0} alignItems="center">
-          {game.home_team.name}
-        </FormLabel>
-        <Input
-          display="inline"
-          width="12%"
-          mr={"1em"}
-          value={homeScore.toString()}
-          disabled
-        />
-        <FormLabel display="flex" width="25%" mb={0} alignItems="center">
-          {game.away_team.name}
-        </FormLabel>
-        <Input
-          display="inline"
-          width="12%"
-          mr={"1em"}
-          value={awayScore.toString()}
-          disabled
-        />
-        <Button colorScheme="teal" disabled>
-          Save
-        </Button>
+      <FormControl display="flex" as="form" mt="1em" flexDirection="column">
+        <Flex>
+          <FormLabel display="flex" width="60%" mb={0} alignItems="center">
+            Korea Republic
+          </FormLabel>
+          <Input
+            display="inline"
+            width="20%"
+            my={"0.5rem"}
+            value={homeScore.toString()}
+            disabled
+            px={1}
+            textAlign="center"
+          />
+        </Flex>
+        <Flex>
+          <FormLabel display="flex" width="60%" mb={0} alignItems="center">
+            {game.away_team.name}
+          </FormLabel>
+          <Input
+            display="inline"
+            width="20%"
+            my={"0.5rem"}
+            value={awayScore.toString()}
+            disabled
+            px={1}
+            textAlign="center"
+          />
+        </Flex>
       </FormControl>
       <PredictionScore processed={processed} score={score} />
     </Box>

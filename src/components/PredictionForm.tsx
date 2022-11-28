@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -80,44 +81,50 @@ const PredictionForm = ({ game, userId }: Props) => {
 
   return (
     <Box>
-      <FormControl display="flex" as="form" mt="1em">
-        <FormLabel display="flex" width="22%" mb={0} alignItems="center">
-          {game.home_team.name}
-        </FormLabel>
-        <Input
-          type="number"
-          display="inline"
-          width="15%"
-          mr={"1em"}
-          value={homeScore.toString()}
-          onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
-          disabled={!predictionFetched}
-          px={1}
-          textAlign="center"
-        />
-        <FormLabel display="flex" width="22%" mb={0} alignItems="center">
-          {game.away_team.name}
-        </FormLabel>
-        <Input
-          type="number"
-          display="inline"
-          width="15%"
-          mr={"1em"}
-          value={awayScore.toString()}
-          onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
-          disabled={!predictionFetched}
-          px={1}
-          textAlign="center"
-        />
-        <Button
-          colorScheme={predictionExists ? "messenger" : "red"}
-          isLoading={submitting}
-          type="submit"
-          onClick={handleSubmit}
-          disabled={game.completed}
-        >
-          {predictionExists ? "Save" : "Save!"}
-        </Button>
+      <FormControl display="flex" as="form" mt="1em" flexDirection="column">
+        <Flex>
+          <FormLabel display="flex" width="60%" mb={0} alignItems="center">
+            Korea Republic
+          </FormLabel>
+          <Input
+            type="number"
+            display="inline"
+            width="20%"
+            my={"0.5rem"}
+            value={homeScore.toString()}
+            onChange={(e) => handleScoreChange(true, e.target.valueAsNumber)}
+            disabled={!predictionFetched}
+            px={1}
+            textAlign="center"
+          />
+        </Flex>
+        <Flex>
+          <FormLabel display="flex" width="60%" mb={0} alignItems="center">
+            {game.away_team.name}
+          </FormLabel>
+          <Input
+            type="number"
+            display="inline"
+            width="20%"
+            my={"0.5rem"}
+            value={awayScore.toString()}
+            onChange={(e) => handleScoreChange(false, e.target.valueAsNumber)}
+            disabled={!predictionFetched}
+            px={1}
+            textAlign="center"
+          />
+        </Flex>
+        {!game.completed && (
+          <Button
+            colorScheme={predictionExists ? "messenger" : "red"}
+            isLoading={submitting}
+            type="submit"
+            onClick={handleSubmit}
+            width="25%"
+          >
+            {predictionExists ? "Save" : "Save!"}
+          </Button>
+        )}
       </FormControl>
       <PredictionScore processed={processed} score={score} />
     </Box>
