@@ -10,6 +10,7 @@ import {
 import { MouseEventHandler, useEffect, useState } from "react"
 import { GameWithTeams } from "../types"
 import PredictionScore from "./PredictionScore"
+import flags from "./../lib/flags.json"
 
 interface Props {
   game: GameWithTeams
@@ -84,7 +85,7 @@ const PredictionForm = ({ game, userId }: Props) => {
       <FormControl display="flex" as="form" mt="1em" flexDirection="column">
         <Flex>
           <FormLabel display="flex" width="60%" mb={0} alignItems="center">
-            Korea Republic
+            {flags[game.home_team.name]} {game.home_team.name}
           </FormLabel>
           <Input
             type="number"
@@ -100,7 +101,7 @@ const PredictionForm = ({ game, userId }: Props) => {
         </Flex>
         <Flex>
           <FormLabel display="flex" width="60%" mb={0} alignItems="center">
-            {game.away_team.name}
+            {flags[game.away_team.name]} {game.away_team.name}
           </FormLabel>
           <Input
             type="number"
