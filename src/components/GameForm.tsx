@@ -14,9 +14,10 @@ import { GameWithTeams } from "../types"
 
 interface Props {
   game: GameWithTeams
+  updateGame: (updatedGame: GameWithTeams) => void
 }
 
-const GameForm = ({ game }: Props) => {
+const GameForm = ({ game, updateGame }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [homeScore, setHomeScore] = useState(game.home_score)
   const [awayScore, setAwayScore] = useState(game.away_score)
@@ -36,7 +37,8 @@ const GameForm = ({ game }: Props) => {
         date,
       }),
     })
-    await response.json()
+    const data = await response.json()
+    updateGame({ ...game, ...data.game })
     setSubmitting(false)
     toast({
       title: "Game updated",
