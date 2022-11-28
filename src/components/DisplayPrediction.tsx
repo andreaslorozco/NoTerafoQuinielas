@@ -39,7 +39,7 @@ const DisplayPrediction = ({ game, userId }: Props) => {
       <FormControl display="flex" as="form" mt="1em" flexDirection="column">
         <Flex>
           <FormLabel display="flex" width="60%" mb={0} alignItems="center">
-            Korea Republic
+            {game.home_team.name}
           </FormLabel>
           <Input
             display="inline"
