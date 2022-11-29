@@ -1,9 +1,15 @@
 import { Prediction, PrismaClient } from "@prisma/client"
 import type { NextApiRequest, NextApiResponse } from "next"
 
-type Data = {
+interface PredictionInterface {
   prediction: Prediction
 }
+
+interface Error {
+  message: string
+}
+
+type Data = PredictionInterface | Error
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,13 +29,26 @@ export default async function handler(
   if (req.method === "POST") {
     const { userId, gameId, homeScore, awayScore } = JSON.parse(req.body)
 
-    const existingPrediction = await prisma.prediction.findFirst({
+    const game = await prisma.game.findFirst({
       where: {
-        user_id: userId,
-        game_id: gameId,
+        id: gameId,
+      },
+      include: {
+        predictions: {
+          where: {
+            user_id: userId,
+          },
+        },
       },
     })
 
+    if (game.completed) {
+      return res
+        .status(403)
+        .json({ message: "It's too late to submit a prediction for this game" })
+    }
+
+    const existingPrediction = game.predictions[0]
     if (existingPrediction) {
       const prediction = await prisma.prediction.update({
         data: {

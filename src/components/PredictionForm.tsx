@@ -66,15 +66,25 @@ const PredictionForm = ({ game, userId }: Props) => {
         awayScore,
       }),
     })
-    await response.json()
+    const { prediction, message } = await response.json()
+
+    if (prediction && !message) {
+      setPredictionExists(true)
+      toast({
+        title: "Prediction saved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      })
+    }
     setSubmitting(false)
-    setPredictionExists(true)
-    toast({
-      title: "Prediction saved",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    })
   }
 
   const handleScoreChange = (isHomeScore: boolean, score: number) => {
