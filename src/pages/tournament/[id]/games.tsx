@@ -61,12 +61,12 @@ const GameAdminPage = () => {
     setSelectedPhaseId(+e.target.value)
   }
 
-  const handleProcessScores: MouseEventHandler<
+  const handleProcessPredictions: MouseEventHandler<
     HTMLButtonElement
   > = async () => {
     setProcessingGames(true)
     const completedGames = games.filter((g) => g.completed)
-    const response = await fetch("/api/process-scores", {
+    const response = await fetch("/api/process-predictions", {
       method: "POST",
       body: JSON.stringify({ games: completedGames }),
     })
@@ -125,10 +125,10 @@ const GameAdminPage = () => {
           <Button
             colorScheme="blue"
             w="100%"
-            onClick={handleProcessScores}
+            onClick={handleProcessPredictions}
             disabled={processingGames}
           >
-            Process Scores
+            Process Predictions for All Games
           </Button>
         )}
         {sortedGames.map((g) => (

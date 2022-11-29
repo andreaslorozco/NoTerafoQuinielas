@@ -48,6 +48,38 @@ const GameForm = ({ game, updateGame }: Props) => {
     })
   }
 
+  const handleProcessPredictions: MouseEventHandler<
+    HTMLButtonElement
+  > = async () => {
+    const response = await fetch("/api/process-predictions", {
+      method: "POST",
+      body: JSON.stringify({ games: [game] }),
+    })
+    const { message } = await response.json()
+    toast({
+      title: message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+
+  const handleUnprocessPredictions: MouseEventHandler<
+    HTMLButtonElement
+  > = async () => {
+    const response = await fetch("/api/unprocess-predictions", {
+      method: "POST",
+      body: JSON.stringify({ games: [game] }),
+    })
+    const { message } = await response.json()
+    toast({
+      title: message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+
   return (
     <>
       <Divider my={4} />
@@ -102,6 +134,22 @@ const GameForm = ({ game, updateGame }: Props) => {
           onChange={(e) => setDate(e.target.value)}
         />
       </FormControl>
+      <Button
+        mt={4}
+        colorScheme="cyan"
+        onClick={handleProcessPredictions}
+        isLoading={submitting}
+      >
+        Process Predictions For This Game
+      </Button>
+      <Button
+        mt={4}
+        colorScheme="pink"
+        onClick={handleUnprocessPredictions}
+        isLoading={submitting}
+      >
+        Mark Predictions as Unprocessed
+      </Button>
     </>
   )
 }
